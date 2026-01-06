@@ -1,0 +1,113 @@
+# Observations sur Gemini - Tests du Playground
+
+**Date :** 2026-01-06  
+**Modèle testé :** gemini-2.5-flash
+
+---
+
+## 🎯 Forces de Gemini
+
+### 1. Compréhension du code
+- ✅ Détecte bien les erreurs de syntaxe
+- ✅ Comprend le contexte du code
+- ✅ Capable d'analyser plusieurs types de bugs
+
+### 2. Respect des instructions
+- ✅ Suit bien les formats JSON demandés
+- ✅ Respecte les règles strictes
+- ⚠️ Peut parfois ajouter du texte avant/après le JSON
+
+### 3. Qualité des réponses
+- ✅ Explications claires
+- ✅ Suggestions pertinentes
+- ✅ Capable de donner des exemples de correction
+
+---
+
+## ⚠️ Limites et faiblesses
+
+### 1. Hallucinations possibles
+- ⚠️ Peut inventer des bugs qui n'existent pas
+- **Solution :** Ajouter "Ne JAMAIS inventer" dans le prompt
+
+### 2. Format de sortie
+- ⚠️ Peut ajouter du texte explicatif avec le JSON
+- **Solution :** Insister "UNIQUEMENT du JSON, rien d'autre"
+
+### 3. Contexte limité
+- ⚠️ Ne voit qu'un fichier à la fois
+- **Solution :** Garder les prompts concis et clairs
+
+---
+
+## 📋 Bonnes pratiques découvertes
+
+### 1. Structure du prompt efficace
+```
+[Rôle] Tu es un expert Python
+[Règles] RÈGLES ABSOLUES : 1. 2. 3.
+[Tâche] Ta mission est de...
+[Format] Réponds avec ce format exact : {...}
+[Exemple] Voici un exemple de bonne réponse
+[Données] Code à analyser : ...
+```
+
+### 2. Mots clés efficaces
+- ✅ "UNIQUEMENT" pour forcer un format
+- ✅ "JAMAIS" pour interdire un comportement
+- ✅ "EXACT" pour demander de la précision
+- ✅ "Tu dois" au lieu de "Tu peux"
+
+### 3. Longueur optimale
+- ✅ Prompts de 500-1000 mots fonctionnent bien
+- ⚠️ Au-delà de 2000 mots, risque de perte de contexte
+- ✅ Répéter les règles importantes 2-3 fois
+
+---
+## 🧪 Tests effectués
+
+### Test 1 : Détection de bugs simples
+- **Input :** Code avec variable non définie
+- **Résultat :** ✅ Détecté correctement
+- **Format :** ✅ JSON valide
+
+### Test 2 : Code propre (pas de bugs)
+- **Input :** Code parfait avec docstrings
+- **Résultat :** ✅ Aucun faux positif
+- **Format :** ✅ JSON valide
+
+### Test 3 : Code complexe (multiple bugs)
+- **Input :** 5 bugs différents
+- **Résultat :** ✅ 4/5 détectés (a manqué un bug PEP8 mineur)
+- **Format :** ⚠️ A ajouté du texte avant le JSON
+
+## 🧪 Test de connexion
+
+✅ **Connexion réussie** avec `gemini-2.5-flash`  
+✅ **API fonctionnelle** avec la clé configurée  
+✅ **Prêt pour les tests d'analyse de code**
+
+---
+
+## 💡 Recommandations pour les prompts
+
+1. **Toujours définir un rôle clair** : "Tu es un expert..."
+2. **Utiliser des RÈGLES ABSOLUES** en majuscules
+3. **Donner un exemple de sortie attendue**
+4. **Répéter "UNIQUEMENT du JSON"** plusieurs fois
+5. **Interdire explicitement les hallucinations**
+
+---
+
+## 📊 Configuration pour le projet
+
+**Modèle utilisé :** `gemini-2.5-flash` 
+**Tokens moyens par analyse :**
+- Input : ~1500 tokens (prompt + code)
+- Output : ~800 tokens (JSON de réponse)
+- **Total : ~2300 tokens par fichier**
+**Quota :** Gratuit avec limites raisonnables
+
+---
+
+**Conclusion :** Gemini 2.5 Flash est performant pour l'analyse de code. Il nécessite des prompts stricts pour garantir un format JSON pur et éviter les hallucinations.
