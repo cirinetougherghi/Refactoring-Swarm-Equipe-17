@@ -1,0 +1,97 @@
+{
+  "file": "buggy_code_medium.py",
+  "total_issues": 13,
+  "issues": [
+    {
+      "line": 1,
+      "type": "pep8_spacing",
+      "severity": "LOW",
+      "description": "Missing space after comma in function definition parameters.",
+      "suggestion": "Add a space after the comma: `def calculate(x, y):`"
+    },
+    {
+      "line": 1,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function `calculate` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 2,
+      "type": "pep8_spacing",
+      "severity": "LOW",
+      "description": "Missing spaces around assignment operator `=` and arithmetic operator `+`.",
+      "suggestion": "Add spaces around operators: `z = x + y`."
+    },
+    {
+      "line": 5,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function `divide_numbers` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 8,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function `get_user_name` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 11,
+      "type": "class_name_lowercase",
+      "severity": "LOW",
+      "description": "Class name `myclass` should follow PascalCase convention (e.g., `MyClass`).",
+      "suggestion": "Rename the class to `MyClass` to adhere to PEP8 naming conventions."
+    },
+    {
+      "line": 11,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Class `myclass` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the class's purpose and functionality."
+    },
+    {
+      "line": 12,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method `__init__` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the initializer's purpose and any attributes it sets."
+    },
+    {
+      "line": 15,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method `process` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the method's purpose, arguments, and return value."
+    },
+    {
+      "line": 18,
+      "type": "undefined_variable",
+      "severity": "CRITICAL",
+      "description": "Variable `undeclared_variable` is used but has not been defined in the current scope.",
+      "suggestion": "Define `undeclared_variable` before using it, or ensure it is accessible (e.g., as a class attribute or function parameter)."
+    },
+    {
+      "line": 20,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function `main` is missing a docstring.",
+      "suggestion": "Add a docstring that explains the function's purpose and overall program flow."
+    },
+    {
+      "line": 22,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing index `10` of list `nums` which only contains 3 elements (valid indices 0, 1, 2). This will cause an `IndexError`.",
+      "suggestion": "Ensure the index is within the valid range of the list, e.g., `0 <= index < len(nums)`."
+    },
+    {
+      "line": 26,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "Calling `divide_numbers` with `y` set to `0`. This will lead to a `ZeroDivisionError`.",
+      "suggestion": "Add a check in `divide_numbers` for `b == 0` or ensure `y` is not zero before calling the function."
+    }
+  ]
+}
