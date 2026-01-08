@@ -1,0 +1,153 @@
+{
+  "file": "buggy_code_complex.py",
+  "total_issues": 21,
+  "issues": [
+    {
+      "line": 4,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'calculate_statistics' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 7,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "Division by 'n' which can be zero if the input 'data' list is empty. This will cause a 'ZeroDivisionError'.",
+      "suggestion": "Add a check for 'n == 0' before performing division, e.g., 'if n == 0: return None' or handle the error appropriately."
+    },
+    {
+      "line": 12,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "Division by 'n' which can be zero if the input 'data' list is empty. This will cause a 'ZeroDivisionError'.",
+      "suggestion": "Add a check for 'n == 0' before performing division, e.g., 'if n == 0: return 0' or handle the error appropriately."
+    },
+    {
+      "line": 14,
+      "type": "missing_import",
+      "severity": "CRITICAL",
+      "description": "The 'math' module is used for 'math.sqrt' but has not been imported. This will cause a 'NameError'.",
+      "suggestion": "Add 'import math' at the beginning of the file."
+    },
+    {
+      "line": 23,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Class 'DataProcessor' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the class's purpose and attributes."
+    },
+    {
+      "line": 24,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method '__init__' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose and parameters."
+    },
+    {
+      "line": 24,
+      "type": "pep8_spacing",
+      "severity": "LOW",
+      "description": "Missing space after comma in method definition parameters.",
+      "suggestion": "Change 'self,data):' to 'self, data):'."
+    },
+    {
+      "line": 25,
+      "type": "pep8_spacing",
+      "severity": "LOW",
+      "description": "Missing space around assignment operator '='.",
+      "suggestion": "Change 'self.data=data' to 'self.data = data'."
+    },
+    {
+      "line": 28,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method 'process' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose, arguments, and return value."
+    },
+    {
+      "line": 35,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method 'get_value' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose, arguments, and return value."
+    },
+    {
+      "line": 36,
+      "type": "none_operation",
+      "severity": "HIGH",
+      "description": "'self.results' can be 'None' if 'process()' was not called or if 'process()' was called with an empty dataset. Accessing 'None[key]' will raise a 'TypeError'.",
+      "suggestion": "Add a check 'if self.results is None:' before accessing it, and handle this case (e.g., raise an error, return a default value)."
+    },
+    {
+      "line": 36,
+      "type": "key_error",
+      "severity": "HIGH",
+      "description": "The dictionary 'self.results' is accessed with 'key', but 'key' might not exist (e.g., 'median' as used in 'main'). This will raise a 'KeyError'.",
+      "suggestion": "Implement a safer access method like 'self.results.get(key, default_value)' or check for key existence using 'if key in self.results:'."
+    },
+    {
+      "line": 38,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Method 'save_to_file' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose, arguments, and return value."
+    },
+    {
+      "line": 42,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'load_data_from_file' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 44,
+      "type": "file_not_found",
+      "severity": "HIGH",
+      "description": "The 'open()' call in 'load_data_from_file' does not include error handling for 'FileNotFoundError'. If 'filename' points to a non-existent file, the program will crash.",
+      "suggestion": "Implement robust error handling using a 'try-except FileNotFoundError' block around the 'open()' call to gracefully manage missing files."
+    },
+    {
+      "line": 50,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'main' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose."
+    },
+    {
+      "line": 55,
+      "type": "key_error",
+      "severity": "HIGH",
+      "description": "The key 'median' passed to 'get_value' does not exist in the results dictionary ('count', 'sum', 'average', 'std_dev'), leading to a 'KeyError' when 'get_value' attempts to access it.",
+      "suggestion": "Use an existing key like 'average' or 'std_dev', or modify 'calculate_statistics' to include 'median' if it's required."
+    },
+    {
+      "line": 59,
+      "type": "none_operation",
+      "severity": "HIGH",
+      "description": "When 'DataProcessor' is initialized with an empty list, its 'process()' method returns 'None'. Consequently, 'result2' will be 'None'.",
+      "suggestion": "Handle the 'None' return value from 'process()' before performing further operations on 'result2'."
+    },
+    {
+      "line": 60,
+      "type": "none_operation",
+      "severity": "HIGH",
+      "description": "'result2' is 'None' (from line 59) because 'process()' was called with an empty dataset. Attempting to access 'None[\"average\"]' will raise a 'TypeError'.",
+      "suggestion": "Check if 'result2' is 'None' before attempting to access its keys, e.g., 'if result2: print(result2[\"average\"])'."
+    },
+    {
+      "line": 62,
+      "type": "file_not_found",
+      "severity": "HIGH",
+      "description": "The call to 'load_data_from_file' uses the path \"nonexistent.txt\", which will cause a 'FileNotFoundError' to be raised by the 'open()' function within 'load_data_from_file'.",
+      "suggestion": "Ensure the specified file path exists or wrap this call in a 'try-except FileNotFoundError' block in 'main()' to handle the potential error."
+    },
+    {
+      "line": 66,
+      "type": "pep8_spacing",
+      "severity": "LOW",
+      "description": "Missing space around comparison operator '=='.",
+      "suggestion": "Change '__name__==\"__main__\":' to '__name__ == \"__main__\":'."
+    }
+  ]
+}
