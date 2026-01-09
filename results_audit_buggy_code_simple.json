@@ -7,35 +7,35 @@
       "type": "missing_docstring",
       "severity": "MEDIUM",
       "description": "Function 'calculate_average' is missing a docstring.",
-      "suggestion": "Add a docstring to explain the purpose, arguments, and return value of the function, e.g., '\"\"\"Calculates the average of a list of numbers.\"\"\"'."
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
     },
     {
       "line": 6,
       "type": "division_by_zero",
       "severity": "HIGH",
-      "description": "Division by 'count' can lead to a ZeroDivisionError if the 'numbers' list is empty.",
-      "suggestion": "Add a check for an empty list before division, e.g., 'if count == 0: return 0' or raise an appropriate error."
+      "description": "Division by 'count' which can be zero if the 'numbers' list is empty.",
+      "suggestion": "Add a check for an empty 'numbers' list before dividing, e.g., 'if count == 0: return 0' or raise an error."
     },
     {
       "line": 9,
       "type": "missing_docstring",
       "severity": "MEDIUM",
       "description": "Function 'process_data' is missing a docstring.",
-      "suggestion": "Add a docstring to explain the purpose of the function, e.g., '\"\"\"Processes a predefined set of data.\"\"\"'."
+      "suggestion": "Add a docstring to explain the function's purpose."
     },
     {
       "line": 13,
       "type": "missing_import",
       "severity": "CRITICAL",
-      "description": "Module 'math' is used ('math.sqrt') but has not been imported.",
-      "suggestion": "Add 'import math' at the beginning of the file to use its functions."
+      "description": "The 'math' module is used for 'math.sqrt' but has not been imported.",
+      "suggestion": "Add 'import math' at the beginning of the file."
     },
     {
       "line": 18,
       "type": "missing_docstring",
       "severity": "MEDIUM",
       "description": "Function 'multiply_by_two' is missing a docstring.",
-      "suggestion": "Add a docstring to explain the purpose, arguments, and return value of the function, e.g., '\"\"\"Multiplies a given value by two.\"\"\"'."
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
     }
   ]
 }

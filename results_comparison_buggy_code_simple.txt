@@ -5,7 +5,7 @@ COMPARAISON AVANT/APRÈS
 Fichier : buggy_code_simple.py
 Problèmes détectés : 5
 Lignes originales : 22
-Lignes corrigées : 48
+Lignes corrigées : 47
 
 ================================================================================
 CODE ORIGINAL
@@ -44,10 +44,10 @@ def calculate_average(numbers):
     Calculates the average of a list of numbers.
 
     Args:
-        numbers (list): A list of numerical values.
+        numbers: A list of numerical values.
 
     Returns:
-        float: The average of the numbers, or 0 if the list is empty.
+        The average of the numbers, or 0 if the list is empty to prevent division by zero.
     """
     total = sum(numbers)
     count = len(numbers)
@@ -58,9 +58,8 @@ def calculate_average(numbers):
 
 def process_data():
     """
-    Processes a predefined set of data, calculates its average,
-    square root of the average, and multiplies the average by two.
-    Prints the results.
+    Processes a predefined list of data by calculating its average
+    and square root, then performs a multiplication.
     """
     data = [1, 2, 3, 4, 5]
     avg = calculate_average(data)
@@ -75,10 +74,10 @@ def multiply_by_two(value):
     Multiplies a given numerical value by two.
 
     Args:
-        value (int or float): The number to be multiplied.
+        value: The number to be multiplied.
 
     Returns:
-        int or float: The result of value * 2.
+        The input value multiplied by two.
     """
     return value * 2
 
