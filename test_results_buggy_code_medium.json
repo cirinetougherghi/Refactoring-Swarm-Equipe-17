@@ -1,97 +1,111 @@
 {
   "file": "buggy_code_medium.py",
-  "total_issues": 13,
+  "total_issues": 15,
   "issues": [
+    {
+      "line": 1,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'calculate' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
     {
       "line": 1,
       "type": "pep8_spacing",
       "severity": "LOW",
       "description": "Missing space after comma in function definition parameters.",
-      "suggestion": "Add a space after the comma: `def calculate(x, y):`"
-    },
-    {
-      "line": 1,
-      "type": "missing_docstring",
-      "severity": "MEDIUM",
-      "description": "Function `calculate` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+      "suggestion": "Add a space after 'x': `def calculate(x, y):`."
     },
     {
       "line": 2,
       "type": "pep8_spacing",
       "severity": "LOW",
-      "description": "Missing spaces around assignment operator `=` and arithmetic operator `+`.",
+      "description": "Missing spaces around assignment operator '=' and arithmetic operator '+'.",
       "suggestion": "Add spaces around operators: `z = x + y`."
     },
     {
       "line": 5,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Function `divide_numbers` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+      "description": "Function 'divide_numbers' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 6,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "The division operation uses variable 'b' as a divisor, which can potentially be zero, leading to a ZeroDivisionError.",
+      "suggestion": "Add a check to ensure 'b' is not zero before performing the division: `if b == 0: return 0` (or raise an appropriate error)."
     },
     {
       "line": 8,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Function `get_user_name` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the function's purpose, arguments, and return value."
+      "description": "Function 'get_user_name' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 9,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing `users` with `user_id` without checking if the index/key exists, which can lead to IndexError or KeyError.",
+      "suggestion": "Add a check to ensure `user_id` is a valid index or key before access. E.g., `if user_id < len(users):` for lists, or `if user_id in users:` for dictionaries."
     },
     {
       "line": 11,
       "type": "class_name_lowercase",
       "severity": "LOW",
-      "description": "Class name `myclass` should follow PascalCase convention (e.g., `MyClass`).",
-      "suggestion": "Rename the class to `MyClass` to adhere to PEP8 naming conventions."
+      "description": "Class name 'myclass' should be in PascalCase (e.g., 'MyClass') according to PEP8 naming conventions.",
+      "suggestion": "Rename the class to 'MyClass'."
     },
     {
       "line": 11,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Class `myclass` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the class's purpose and functionality."
+      "description": "Class 'myclass' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the class's purpose."
     },
     {
       "line": 12,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Method `__init__` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the initializer's purpose and any attributes it sets."
+      "description": "Method '__init__' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose, arguments, and return value."
     },
     {
       "line": 15,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Method `process` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the method's purpose, arguments, and return value."
+      "description": "Method 'process' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the method's purpose, arguments, and return value."
     },
     {
       "line": 18,
       "type": "undefined_variable",
       "severity": "CRITICAL",
-      "description": "Variable `undeclared_variable` is used but has not been defined in the current scope.",
-      "suggestion": "Define `undeclared_variable` before using it, or ensure it is accessible (e.g., as a class attribute or function parameter)."
+      "description": "Variable 'undeclared_variable' is used but never defined, leading to a NameError during execution.",
+      "suggestion": "Define 'undeclared_variable' before using it, or ensure it's passed as an argument if intended to be an external value."
     },
     {
       "line": 20,
       "type": "missing_docstring",
       "severity": "MEDIUM",
-      "description": "Function `main` is missing a docstring.",
-      "suggestion": "Add a docstring that explains the function's purpose and overall program flow."
+      "description": "Function 'main' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose."
     },
     {
       "line": 22,
       "type": "index_out_of_bounds",
       "severity": "HIGH",
-      "description": "Accessing index `10` of list `nums` which only contains 3 elements (valid indices 0, 1, 2). This will cause an `IndexError`.",
-      "suggestion": "Ensure the index is within the valid range of the list, e.g., `0 <= index < len(nums)`."
+      "description": "Attempting to access index 10 in list 'nums' which has only 3 elements, leading to an IndexError.",
+      "suggestion": "Ensure the index used for accessing a list is within its valid range (0 to len(list)-1). For 'nums', valid indices are 0, 1, 2."
     },
     {
       "line": 26,
       "type": "division_by_zero",
       "severity": "HIGH",
-      "description": "Calling `divide_numbers` with `y` set to `0`. This will lead to a `ZeroDivisionError`.",
-      "suggestion": "Add a check in `divide_numbers` for `b == 0` or ensure `y` is not zero before calling the function."
+      "description": "The function 'divide_numbers' is called with 'y' explicitly set to 0, which will cause a ZeroDivisionError during execution.",
+      "suggestion": "Ensure the divisor 'y' is not zero before calling 'divide_numbers', or implement error handling within 'divide_numbers' to manage division by zero."
     }
   ]
 }

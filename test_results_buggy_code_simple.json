@@ -13,8 +13,8 @@
       "line": 6,
       "type": "division_by_zero",
       "severity": "HIGH",
-      "description": "Potential division by zero. If the 'numbers' list is empty, 'count' will be 0, leading to a ZeroDivisionError.",
-      "suggestion": "Add a check for 'count == 0' before performing the division, e.g., 'if count == 0: return 0' or raise an appropriate error."
+      "description": "Division by 'count' which can be zero if the 'numbers' list is empty.",
+      "suggestion": "Add a check for an empty list before performing division, e.g., 'if count == 0: return 0' or raise a ValueError."
     },
     {
       "line": 9,
@@ -27,8 +27,8 @@
       "line": 13,
       "type": "missing_import",
       "severity": "CRITICAL",
-      "description": "The 'math' module is used (math.sqrt) but has not been imported.",
-      "suggestion": "Add 'import math' at the top of the file to use its functions."
+      "description": "Module 'math' is used (math.sqrt) but not imported.",
+      "suggestion": "Add 'import math' at the beginning of the file."
     },
     {
       "line": 18,
