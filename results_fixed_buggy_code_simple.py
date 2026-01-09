@@ -1,0 +1,48 @@
+import os
+import math
+
+def calculate_average(numbers):
+    """
+    Calculates the average of a list of numbers.
+
+    Args:
+        numbers (list): A list of numerical values.
+
+    Returns:
+        float: The average of the numbers, or 0 if the list is empty.
+    """
+    total = sum(numbers)
+    count = len(numbers)
+    if count == 0:
+        return 0
+    average = total / count
+    return average
+
+def process_data():
+    """
+    Processes a predefined set of data, calculates its average,
+    square root of the average, and multiplies the average by two.
+    Prints the results.
+    """
+    data = [1, 2, 3, 4, 5]
+    avg = calculate_average(data)
+    print(f"Average: {avg}")
+    print(f"Square root: {math.sqrt(avg)}")
+    
+    result = multiply_by_two(avg)
+    print(result)
+
+def multiply_by_two(value):
+    """
+    Multiplies a given numerical value by two.
+
+    Args:
+        value (int or float): The number to be multiplied.
+
+    Returns:
+        int or float: The result of value * 2.
+    """
+    return value * 2
+
+if __name__ == "__main__":
+    process_data()

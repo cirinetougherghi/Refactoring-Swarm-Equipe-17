@@ -102,8 +102,64 @@ Première version fonctionnelle du prompt Auditeur capable d'analyser du code Py
 
 ## Agent Correcteur
 
-### v1.0 (À venir)
-- Version initiale en cours de développement
+## Agent Correcteur (Fixer)
+
+### Version 1.0 (Date : 09/01/2026)
+**Statut** : ✅ Validé et fonctionnel
+
+**Caractéristiques :**
+- Lit le code buggé + rapport JSON de l'Auditeur
+- Corrige tous les bugs détectés
+- Ajoute les docstrings manquantes
+- Respecte PEP8
+- Conserve la logique originale
+
+**Entrées :**
+- Nom du fichier
+- Code original (buggé)
+- Rapport JSON de l'Auditeur
+
+**Sortie :**
+- Code Python corrigé (uniquement du code, pas d'explications)
+
+**Tests effectués :**
+- ✅ Test sur `buggy_code_simple.py` (5 bugs)
+  - Résultat : Code corrigé valide syntaxiquement
+  - Bugs corrigés : 5/5 (100%)
+  - Division par zéro gérée avec check
+  - Import math ajouté
+  - 3 docstrings ajoutées
+
+**Métriques :**
+- Taux de correction : 100%
+- Code syntaxiquement valide : ✅
+- Temps de génération : ~3-5 secondes
+- Tokens moyens : ~1400 (prompt) + ~270 (réponse)
+
+**Problèmes connus :**
+- Aucun problème majeur détecté
+- Le code généré est plus long (ajout docstrings détaillées)
+- Format de sortie : Code pur (pas de balises markdown)
+
+**Règles appliquées :**
+1. ✅ Conserve la structure originale du code
+2. ✅ Ne réécrit pas complètement
+3. ✅ Ajoute des docstrings détaillées avec Args/Returns
+4. ✅ Respecte PEP8 (espaces, formatage)
+5. ✅ Gère les cas limites (division par zéro, listes vides)
+
+**Intégration :**
+- Module : `src/prompts/fixer_prompt.py`
+- Fonction : `get_fixer_prompt(filename, buggy_code, audit_report)`
+- Exporté dans `src/prompts/__init__.py`
+
+**Prochaines améliorations possibles :**
+- Tester sur des fichiers plus complexes (15+ bugs)
+- Optimiser la longueur des docstrings
+- Ajouter des type hints systématiquement
+
+**Auteur :** Ingénieur Prompt  
+**Validé le :** 09/01/2026
 
 ---
 
