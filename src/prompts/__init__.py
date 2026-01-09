@@ -12,11 +12,13 @@ Version: 1.0
 """
 
 from .auditor_prompt import get_auditor_prompt, get_auditor_metadata
-
+from .fixer_prompt import get_fixer_prompt, get_fixer_metadata
 __version__ = "1.0.0"
 __author__ = "Ingénieur Prompt"
 
 __all__ = [
-    "get_auditor_prompt",
+  "get_auditor_prompt",
     "get_auditor_metadata",
+    "get_fixer_prompt",
+    "get_fixer_metadata",
 ]
