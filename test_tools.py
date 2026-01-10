@@ -5,7 +5,7 @@ import shutil
 
 SANDBOX_DIR = "sandbox"
 
-# ==== 1️⃣ run_pylint ====
+
 def run_pylint(file_path):
     result = subprocess.run(["pylint", file_path, "-f", "json"], capture_output=True, text=True)
     try:
@@ -15,14 +15,14 @@ def run_pylint(file_path):
         score = 0
     return score
 
-# ==== 2️⃣ run_pytest ====
+
 def run_pytest(target):
     result = subprocess.run(["pytest", target, "--disable-warnings", "-q", "--tb=short"], capture_output=True, text=True)
     passed = result.stdout.count("PASSED")
     failed = result.stdout.count("FAILED")
     return {"passed": passed, "failed": failed}
 
-# ==== 3️⃣ read_file / write_file ====
+
 def read_file(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
@@ -31,7 +31,7 @@ def write_file(path, content):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
-# ==== تجربة كل الأدوات ====
+
 def test_tools():
     report = {"files": {}, "summary": {"total_files": 0, "total_passed": 0, "total_failed": 0}}
     for f in os.listdir(SANDBOX_DIR):
@@ -49,17 +49,17 @@ def test_tools():
             # pytest
             test_res = run_pytest(path)
             
-            # توليد report
+        
             report["files"][f] = {"pylint_score": score, **test_res}
             report["summary"]["total_files"] += 1
             report["summary"]["total_passed"] += test_res["passed"]
             report["summary"]["total_failed"] += test_res["failed"]
     
-    # حفظ report.json
+# report.json
     with open("report.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=4)
     
-    print("✅ التجربة تمت و report.json تولد")
+    print("report json creé")
     print(json.dumps(report, indent=2))
 
 if __name__ == "__main__":

@@ -7,8 +7,8 @@ import subprocess
 sys.path.insert(0, os.path.abspath("."))
 
 # Importer les outils
-from tools.analysis_tools import run_pylint, run_pytest
-from tools.file_tools import read_file, write_file
+from src.tools.analysis_tools import run_pylint, run_pytest
+from src.tools.file_tools import read_file, write_file
 
 # Dossier sandbox
 SANDBOX_DIR = "sandbox"

@@ -8,15 +8,19 @@ import subprocess
 from typing import Dict
 
 
-def run_pylint(file_path: str) -> Dict[str, str]:
+from typing import Dict
+import subprocess
+import os
+
+def run_pylint(file_path: str) -> Dict[str, float | str | int | bool]:
     """
-    Run pylint on a Python file.
+    Run pylint on a Python file and extract the score.
 
     Args:
         file_path (str): Path to the Python file.
 
     Returns:
-        Dict[str, str]: Dictionary containing stdout, stderr, and return code.
+        dict: Dictionary containing pylint score and execution details.
     """
     if not os.path.isfile(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
@@ -28,11 +32,22 @@ def run_pylint(file_path: str) -> Dict[str, str]:
         check=False
     )
 
+   
+    score = 0.0
+    for line in result.stdout.split("\n"):
+        if "rated at" in line:
+            
+            score = float(line.split("rated at")[1].split("/")[0].strip())
+
     return {
+        "score": score,
+        "max_score": 10.0,
         "stdout": result.stdout,
         "stderr": result.stderr,
-        "returncode": str(result.returncode),
+        "returncode": result.returncode,
+        "success": result.returncode == 0
     }
+
 def run_pytest(target_path: str) -> dict:
     """
     Run pytest on a given file or directory.
