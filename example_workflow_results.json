@@ -1,0 +1,58 @@
+{
+  "file": "buggy_code_simple.py",
+  "iterations": [
+    {
+      "iteration": 1,
+      "audit": {
+        "file": "buggy_code_simple.py",
+        "total_issues": 4,
+        "issues": [
+          {
+            "line": 5,
+            "type": "division_by_zero",
+            "severity": "HIGH",
+            "description": "Division by 'count' which can be zero if the 'numbers' list passed to 'calculate_average' is empty.",
+            "suggestion": "Add a check for 'count == 0' before performing the division, for example: 'if count == 0: return 0' or raise an error."
+          },
+          {
+            "line": 8,
+            "type": "missing_docstring",
+            "severity": "MEDIUM",
+            "description": "Function 'process_data' is missing a docstring.",
+            "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+          },
+          {
+            "line": 12,
+            "type": "missing_import",
+            "severity": "CRITICAL",
+            "description": "Module 'math' is used via 'math.sqrt()' but has not been imported.",
+            "suggestion": "Add 'import math' at the beginning of the file to use the math module."
+          },
+          {
+            "line": 17,
+            "type": "missing_docstring",
+            "severity": "MEDIUM",
+            "description": "Function 'multiply_by_two' is missing a docstring.",
+            "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+          }
+        ]
+      },
+      "fix": {
+        "original_lines": 22,
+        "fixed_lines": 44
+      },
+      "test": {
+        "file": "buggy_code_simple.py",
+        "decision": "VALIDATE",
+        "total_tests": 5,
+        "passed": 5,
+        "failed": 0,
+        "errors": [],
+        "message": "All tests passed successfully. Code is validated."
+      }
+    }
+  ],
+  "final_status": "VALIDATED",
+  "total_bugs_found": 4,
+  "total_bugs_fixed": 4
+}
