@@ -1,0 +1,16 @@
+{
+  "file": "buggy_code_simple.py",
+  "decision": "PASS_TO_FIXER",
+  "total_tests": 0,
+  "passed": 0,
+  "failed": 0,
+  "errors": [
+    {
+      "test_name": "N/A",
+      "error_type": "ImportError",
+      "message": "No module named 'math'",
+      "location": "test_code.py:2"
+    }
+  ],
+  "message": "Execution error. Code cannot be tested."
+}

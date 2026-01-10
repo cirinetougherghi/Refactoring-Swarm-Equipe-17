@@ -1,0 +1,41 @@
+{
+  "file": "buggy_code_simple.py",
+  "total_issues": 5,
+  "issues": [
+    {
+      "line": 3,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'calculate_average' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 6,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "Division by 'count' which can be zero if the 'numbers' list is empty.",
+      "suggestion": "Add a check for an empty list before performing division, e.g., 'if count == 0: return 0' or raise a ValueError."
+    },
+    {
+      "line": 9,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'process_data' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose."
+    },
+    {
+      "line": 13,
+      "type": "missing_import",
+      "severity": "CRITICAL",
+      "description": "Module 'math' is used (math.sqrt) but not imported.",
+      "suggestion": "Add 'import math' at the beginning of the file."
+    },
+    {
+      "line": 18,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'multiply_by_two' is missing a docstring.",
+      "suggestion": "Add a docstring to explain the function's purpose, arguments, and return value."
+    }
+  ]
+}
