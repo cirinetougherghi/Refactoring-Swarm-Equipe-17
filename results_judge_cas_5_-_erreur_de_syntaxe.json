@@ -1,0 +1,16 @@
+{
+  "file": "buggy_code_simple.py",
+  "decision": "PASS_TO_FIXER",
+  "total_tests": 0,
+  "passed": 0,
+  "failed": 0,
+  "errors": [
+    {
+      "test_name": "N/A",
+      "error_type": "SyntaxError",
+      "message": "invalid syntax",
+      "location": "test_code.py:10"
+    }
+  ],
+  "message": "Execution error. Code cannot be tested."
+}
