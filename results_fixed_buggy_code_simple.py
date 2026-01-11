@@ -1,27 +1,27 @@
-import os
 import math
 
-def calculate_average(numbers):
-    """
-    Calculates the average of a list of numbers.
+def calculate_average(numbers: list[float]) -> float:
+    """Calculates the average of a list of numbers.
 
     Args:
-        numbers: A list of numerical values.
+        numbers (list[float]): A list of numbers (integers or floats).
 
     Returns:
-        The average of the numbers, or 0 if the list is empty to prevent division by zero.
+        float: The average of the numbers in the list.
+
+    Raises:
+        ValueError: If the input list is empty.
     """
+    if not numbers:
+        raise ValueError("Cannot calculate average of an empty list.")
     total = sum(numbers)
     count = len(numbers)
-    if count == 0:
-        return 0
     average = total / count
     return average
 
-def process_data():
-    """
-    Processes a predefined list of data by calculating its average
-    and square root, then performs a multiplication.
+def process_data() -> None:
+    """Processes a predefined list of data, calculates its average,
+    its square root, and then multiplies the average by two.
     """
     data = [1, 2, 3, 4, 5]
     avg = calculate_average(data)
@@ -31,15 +31,14 @@ def process_data():
     result = multiply_by_two(avg)
     print(result)
 
-def multiply_by_two(value):
-    """
-    Multiplies a given numerical value by two.
+def multiply_by_two(value: float) -> float:
+    """Multiplies a given numerical value by two.
 
     Args:
-        value: The number to be multiplied.
+        value (float): The number to be multiplied.
 
     Returns:
-        The input value multiplied by two.
+        float: The result of multiplying the value by two.
     """
     return value * 2
 

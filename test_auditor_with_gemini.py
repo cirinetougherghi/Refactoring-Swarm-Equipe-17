@@ -134,10 +134,10 @@ def main():
     
     # Liste des fichiers à tester
     test_files = [
-        "sandbox/test_samples/buggy_code_simple.py",
-        "sandbox/test_samples/buggy_code_medium.py",
-         "sandbox/test_samples/clean_code.py",
-       
+         "sandbox/test_samples/buggy_code_simple.py",  
+         "sandbox/test_samples/buggy_code_medium.py", 
+         "sandbox/test_samples/buggy_code_complex.py",
+         "sandbox/test_samples/buggy_code_edge_cases.py",
     ]
     
     for file_path in test_files:
@@ -145,7 +145,6 @@ def main():
         print("\n")
     
     print("✅ TESTS TERMINÉS !\n")
-
 
 if __name__ == "__main__":
     main()
