@@ -10,152 +10,61 @@ Le Correcteur lit le code buggé et le rapport de l'Auditeur, puis corrige tous 
 """
 
 
-def get_fixer_prompt(file_name: str, buggy_code: str, audit_report: dict) -> str:
+def get_fixer_prompt(filename: str, buggy_code: str, audit_report: dict) -> str:
     """
-    Génère le prompt complet pour l'agent Correcteur.
+    Génère le prompt pour l'Agent Correcteur (Fixer) - VERSION OPTIMISÉE v1.1.
     
     Args:
-        file_name (str): Nom du fichier à corriger
-        buggy_code (str): Code original avec bugs
-        audit_report (dict): Rapport JSON de l'Auditeur avec la liste des problèmes
-        
+        filename (str): Nom du fichier à corriger
+        buggy_code (str): Code Python avec bugs
+        audit_report (dict): Rapport JSON de l'Auditeur
+    
     Returns:
-        str: Le prompt formaté prêt à être envoyé à Gemini
+        str: Prompt optimisé prêt à envoyer à Gemini
+    
+    Version: 1.1 (optimisée -12% tokens)
     """
     
-    # Convertir le rapport en texte lisible
-    issues_text = ""
-    for i, issue in enumerate(audit_report.get("issues", []), 1):
-        issues_text += f"""
-{i}. Ligne {issue.get('line')} - {issue.get('severity')}
-   Type: {issue.get('type')}
-   Problème: {issue.get('description')}
-   Suggestion: {issue.get('suggestion')}
-"""
+    # Convertit le rapport en JSON string
+    import json
+    audit_json = json.dumps(audit_report, indent=2, ensure_ascii=False)
     
-    total_issues = audit_report.get("total_issues", 0)
-    
-    prompt = f"""Tu es un Expert Correcteur de Code Python avec 15 ans d'expérience en refactoring et maintenance logicielle.
+    prompt = f"""Tu es un expert Python chargé de corriger les bugs détectés.
 
-🎯 TA MISSION :
-Corriger le code Python fourni en résolvant TOUS les problèmes identifiés dans le rapport d'audit.
+📋 FICHIER : {filename}
 
-📋 RÈGLES ABSOLUES À RESPECTER :
+🐛 RAPPORT D'AUDIT :
+{audit_json}
 
-1. Tu DOIS corriger TOUS les problèmes listés dans le rapport
-2. Tu DOIS conserver la logique originale du code (ne pas le réécrire complètement)
-3. Tu DOIS respecter l'architecture existante (noms de fonctions, classes, structure)
-4. Tu DOIS produire UNIQUEMENT du code Python valide - RIEN D'AUTRE
-5. Ne JAMAIS ajouter de texte explicatif avant ou après le code
-6. Ne JAMAIS utiliser de balises markdown (pas de ```python ou ```)
-7. Le code corrigé doit être prêt à être exécuté tel quel
-
-🔧 GUIDE DE CORRECTION PAR TYPE DE PROBLÈME :
-
-**CRITICAL - Corrections immédiates :**
-
-1. **missing_import** : Ajouter l'import manquant en haut du fichier
-   Exemple : Si math.sqrt() est utilisé → Ajouter "import math" en haut
-
-2. **undefined_variable** : Définir la variable ou la passer en paramètre
-   Exemple : Si 'message' n'existe pas → Ajouter comme paramètre avec valeur par défaut
-
-3. **syntax_error** : Corriger la syntaxe Python
-   Exemple : Ajouter les deux-points manquants, fermer les parenthèses
-
-**HIGH - Protections contre les crashes :**
-
-1. **division_by_zero** : Ajouter une vérification avant la division
-   Exemple : if count == 0: return 0
-   OU : if not numbers: return 0
-
-2. **index_out_of_bounds** : Vérifier la taille avant l'accès
-   Exemple : if index < len(liste): ...
-   OU : Utiliser try/except IndexError
-
-3. **key_error** : Utiliser .get() ou vérifier l'existence
-   Exemple : dict.get(key, default_value)
-   OU : if key in dict: ...
-
-4. **none_operation** : Ajouter une vérification None
-   Exemple : if variable is not None: ...
-
-5. **file_not_found** : Ajouter un try/except
-   Exemple : try/except FileNotFoundError
-
-**MEDIUM - Améliorations de qualité :**
-
-1. **missing_docstring** : Ajouter une docstring complète
-   Format :
-   \"\"\"
-   Description courte de la fonction.
-   
-   Args:
-       param1: Description du paramètre
-       
-   Returns:
-       Description du retour
-   \"\"\"
-
-2. **non_descriptive_name** : Renommer uniquement si vraiment nécessaire
-
-**LOW - Corrections de style PEP8 :**
-
-1. **pep8_spacing** : Ajouter les espaces manquants
-   - Espace après virgule : (a,b) → (a, b)
-   - Espaces autour opérateurs : x=5 → x = 5
-
-2. **class_name_lowercase** : Mettre en PascalCase
-   Exemple : myclass → MyClass
-
-3. **pep8_line_length** : Découper les lignes trop longues (>79 caractères)
-
-❌ CE QUE TU NE DOIS PAS FAIRE :
-
-1. ❌ Ne PAS réécrire complètement le code
-2. ❌ Ne PAS changer les noms de fonctions/classes (sauf si demandé explicitement)
-3. ❌ Ne PAS changer la logique métier
-4. ❌ Ne PAS ajouter de nouvelles fonctionnalités
-5. ❌ Ne PAS supprimer de code fonctionnel
-6. ❌ Ne PAS ajouter de commentaires explicatifs (sauf docstrings)
-
-📊 RAPPORT D'AUDIT :
-
-Fichier à corriger : {file_name}
-Nombre total de problèmes : {total_issues}
-
-Liste des problèmes à corriger :
-{issues_text}
-
-📄 CODE ORIGINAL (BUGGÉ) :
+📝 CODE ORIGINAL :
 ```python
 {buggy_code}
 ```
 
-🎯 INSTRUCTIONS DE CORRECTION :
+🎯 TA MISSION :
+Corrige TOUS les bugs listés dans le rapport.
 
-1. Lis attentivement le code original et le rapport d'audit
-2. Pour chaque problème listé, applique la correction appropriée selon le guide ci-dessus
-3. Commence par les problèmes CRITICAL, puis HIGH, puis MEDIUM, puis LOW
-4. Vérifie que le code corrigé reste cohérent et fonctionnel
-5. Respecte l'indentation et le style Python
+✅ RÈGLES :
+- Conserve la structure et logique originale
+- Ajoute docstrings Google format (Args, Returns)
+- Gère les cas limites (division par zéro, listes vides, None)
+- Respecte PEP8
+- Ne réécris pas complètement le code
 
-⚠️ FORMAT DE SORTIE :
+❌ INTERDICTIONS :
+- Ajouter des fonctionnalités non demandées
+- Changer la logique métier
+- Inclure des explications ou commentaires (sauf docstrings)
 
-- Réponds UNIQUEMENT avec le code Python corrigé
-- Pas de texte avant (pas de "Voici le code corrigé...")
-- Pas de texte après (pas d'explications)
-- Pas de balises markdown (pas de ```python)
-- Le code doit commencer directement (import ou def ou class)
+📤 FORMAT DE SORTIE :
+Code Python pur UNIQUEMENT. Pas de :
+- Balises markdown (```python)
+- Explications textuelles
+- Commentaires de changements
 
-🚨 RAPPEL FINAL :
-- Corrige TOUS les problèmes listés
-- Conserve la structure originale
-- Code Python pur uniquement
-- Prêt à être exécuté
-
-Commence la correction MAINTENANT :"""
-
+Commence directement par le code corrigé.
+"""
+    
     return prompt
 
 
