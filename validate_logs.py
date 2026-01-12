@@ -54,7 +54,7 @@ def validate_experiment_logs():
         # Vérification détaillée de chaque entrée
         required_fields = ['agent', 'model', 'action', 'details', 'status', 'timestamp']
         valid_actions = ['ANALYSIS', 'GENERATION', 'DEBUG', 'FIX']
-        valid_statuses = ['SUCCESS', 'FAILURE', 'ERROR']
+        valid_statuses = ['SUCCESS', 'FAILURE', 'ERROR', 'PARTIAL']
         
         errors = 0
         warnings = 0
@@ -108,10 +108,19 @@ def validate_experiment_logs():
                             "CRITIQUE: 'input_prompt' manquant ou vide dans details"
                         )
                     
-                    if 'output_response' not in details or not details.get('output_response'):
+                    # ✅ MODIFICATION ICI : output_response peut être vide si status == ERROR ou PARTIAL
+                    if 'output_response' not in details:
                         entry_errors.append(
-                            "CRITIQUE: 'output_response' manquant ou vide dans details"
+                            "CRITIQUE: 'output_response' manquant dans details"
                         )
+                    elif not details.get('output_response'):
+                        # output_response est vide, vérifier le status
+                        status = entry.get('status', '')
+                        if status not in ['ERROR', 'PARTIAL']:
+                            entry_errors.append(
+                                f"CRITIQUE: 'output_response' vide alors que status={status} (devrait être ERROR ou PARTIAL)"
+                            )
+                        # Sinon c'est OK (erreur API, donc pas de réponse)
             
             # Vérifier le timestamp
             if 'timestamp' in entry:
@@ -188,7 +197,7 @@ def validate_experiment_logs():
             print()
             print("📈 Répartition par statut:")
             for status, count in sorted(statuses.items()):
-                emoji = "✅" if status == "SUCCESS" else "❌" if status == "FAILURE" else "⚠️"
+                emoji = "✅" if status == "SUCCESS" else "❌" if status in ["FAILURE", "ERROR"] else "⚠️"
                 print(f"   • {emoji} {status}: {count} fois")
             
             print()

@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from src.prompts.auditor_prompt import get_auditor_prompt
 from src.prompts.fixer_prompt import get_fixer_prompt
+# ✅ AJOUT DATA OFFICER : Import du système de logging
+from src.utils.logger import log_experiment, ActionType
 
 # Charge les variables d'environnement
 load_dotenv()
@@ -73,8 +75,38 @@ def test_full_workflow(file_path: str):
         audit_response = model.generate_content(audit_prompt)
         audit_raw = audit_response.text
         print(f"✅ Rapport d'audit reçu ({len(audit_raw)} caractères)")
+         # ✅ AJOUT DATA OFFICER : Log de l'audit
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": audit_prompt,
+                "output_response": audit_raw,
+                "prompt_length_chars": len(audit_prompt),
+                "response_length_chars": len(audit_raw)
+            },
+            status="SUCCESS"
+        )
+
     except Exception as e:
         print(f"❌ Erreur lors de l'audit : {e}")
+        # ✅ AJOUT DATA OFFICER : Log de l'erreur audit
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": audit_prompt,
+                "output_response": "",
+                "error_type": type(e).__name__,
+                "error_message": str(e)
+            },
+            status="ERROR"
+        )
+
         return
     
     # Parse le JSON
@@ -131,8 +163,37 @@ def test_full_workflow(file_path: str):
         fixer_response = model.generate_content(fixer_prompt)
         fixed_code = fixer_response.text
         print(f"✅ Code corrigé reçu ({len(fixed_code)} caractères)")
+         # ✅ AJOUT DATA OFFICER : Log de la correction
+        log_experiment(
+            agent_name="Fixer_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.FIX,
+            details={
+                "file_fixed": file_name,
+                "input_prompt": fixer_prompt,
+                "output_response": fixed_code,
+                "prompt_length_chars": len(fixer_prompt),
+                "response_length_chars": len(fixed_code),
+                "issues_to_fix": audit_report.get('total_issues', 0)
+            },
+            status="SUCCESS"
+        )
     except Exception as e:
         print(f"❌ Erreur lors de la correction : {e}")
+         # ✅ AJOUT DATA OFFICER : Log de l'erreur correction
+        log_experiment(
+            agent_name="Fixer_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.FIX,
+            details={
+                "file_fixed": file_name,
+                "input_prompt": fixer_prompt,
+                "output_response": "",
+                "error_type": type(e).__name__,
+                "error_message": str(e)
+            },
+            status="ERROR"
+        )
         return
     
     # Nettoie le code (enlève les balises markdown si présentes)
@@ -244,6 +305,8 @@ def main():
     test_full_workflow(test_file)
     
     print("\n✅ TOUS LES TESTS TERMINÉS !\n")
+    print("\n📊 Les logs d'expérimentation ont été enregistrés dans logs/experiment_data.json")
+    print("💡 Lancez 'python validate_logs.py' pour valider le format des logs\n")
 
 
 if __name__ == "__main__":
