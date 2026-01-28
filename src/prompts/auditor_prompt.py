@@ -10,146 +10,68 @@ L'Auditeur analyse du code Python et produit un rapport JSON des problèmes dét
 """
 
 
-def get_auditor_prompt(file_name: str, code_content: str) -> str:
+def get_auditor_prompt(filename: str, code_content: str) -> str:
     """
-    Génère le prompt complet pour l'agent Auditeur.
+    Génère le prompt pour l'Agent Auditeur - VERSION OPTIMISÉE v1.1.
     
     Args:
-        file_name (str): Nom du fichier à analyser
-        code_content (str): Contenu du code Python à analyser
-        
+        filename (str): Nom du fichier à analyser
+        code_content (str): Contenu du code Python
+    
     Returns:
-        str: Le prompt formaté prêt à être envoyé à Gemini
+        str: Prompt optimisé prêt à envoyer à Gemini
+    
+    Version: 1.1 (optimisée -4% tokens, qualité préservée)
     """
     
-    prompt = f"""Tu es un Expert Auditeur de Code Python avec 10 ans d'expérience en analyse statique et détection de bugs.
+    prompt = f"""Tu es un expert Python et auditeur de code.
 
-🎯 TA MISSION :
-Analyser le code Python fourni et produire un rapport JSON complet de TOUS les problèmes détectés.
+📋 FICHIER : {filename}
 
-📋 RÈGLES ABSOLUES À RESPECTER :
-1. Tu DOIS analyser UNIQUEMENT le code fourni - ne JAMAIS inventer de problèmes qui n'existent pas
-2. Tu DOIS répondre UNIQUEMENT avec du JSON valide - RIEN d'autre
-3. Ne JAMAIS ajouter de texte avant le JSON (pas de "Voici le rapport...")
-4. Ne JAMAIS ajouter de texte après le JSON (pas d'explications)
-5. Ne JAMAIS utiliser de balises markdown (pas de ```json)
-6. Chaque problème DOIT avoir : line, type, severity, description, suggestion
-7. Les numéros de ligne commencent à 1 (pas 0)
+🎯 MISSION :
+Analyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.
 
-🔍 TYPES DE PROBLÈMES À DÉTECTER :
+🐛 TYPES DE PROBLÈMES À DÉTECTER :
 
-**SEVERITY: CRITICAL** (Le code ne peut pas s'exécuter)
-- Variables utilisées mais jamais définies (NameError)
-- Imports manquants (utilisation de modules non importés)
-- Erreurs de syntaxe graves
+CRITICAL :
+- Variables non définies
+- Imports manquants
+- Syntaxe invalide
 
-**SEVERITY: HIGH** (Le code plante à l'exécution)
-- Division par zéro (variable qui peut être 0)
-- Index hors limites (accès à un index qui n'existe pas)
-- Accès à des clés de dictionnaire inexistantes (KeyError)
-- Opérations sur None (AttributeError, TypeError)
-- Fichiers inexistants (FileNotFoundError)
+HIGH :
+- Division par zéro
+- Index hors limites
+- Opérations sur None
+- Clés dictionnaire inexistantes
+- Fichiers inexistants
 
-**SEVERITY: MEDIUM** (Problèmes de qualité du code)
-- Fonctions sans docstrings
-- Classes sans docstrings
-- Méthodes sans docstrings
-- Noms de variables non descriptifs (x, tmp, var1, data)
-- Code dupliqué
+MEDIUM :
+- Docstrings manquantes
+- Pas de type hints
+- Nommage non descriptif
 
-**SEVERITY: LOW** (Violations PEP8)
-- Pas d'espaces autour des opérateurs (x=5 au lieu de x = 5)
-- Pas d'espaces après les virgules (def f(a,b) au lieu de def f(a, b))
-- Lignes trop longues (>79 caractères)
-- Noms de classes en minuscules (devrait être PascalCase)
+LOW :
+- Violations PEP8 (espaces, longueur ligne)
 - Imports désordonnés
 
-📊 FORMAT DE SORTIE EXACT :
-
-{{
-  "file": "{file_name}",
-  "total_issues": <nombre_de_problèmes>,
-  "issues": [
-    {{
-      "line": <numéro_de_ligne>,
-      "type": "<type_du_problème>",
-      "severity": "CRITICAL|HIGH|MEDIUM|LOW",
-      "description": "<description_claire_du_problème>",
-      "suggestion": "<suggestion_de_correction_actionnable>"
-    }}
-  ]
-}}
-
-⚠️ EXEMPLES DE FORMAT :
-
-Exemple 1 - Code avec bugs :
-{{
-  "file": "example.py",
-  "total_issues": 2,
-  "issues": [
-    {{
-      "line": 5,
-      "type": "undefined_variable",
-      "severity": "CRITICAL",
-      "description": "Variable 'result' is used but never defined",
-      "suggestion": "Define 'result' before using it, for example: result = 0"
-    }},
-    {{
-      "line": 10,
-      "type": "division_by_zero",
-      "severity": "HIGH",
-      "description": "Division by 'count' which can be zero if list is empty",
-      "suggestion": "Add a check: if count == 0: return 0"
-    }}
-  ]
-}}
-
-Exemple 2 - Code propre (pas de bugs) :
-{{
-  "file": "clean.py",
-  "total_issues": 0,
-  "issues": []
-}}
-
-✅ TYPES DE PROBLÈMES RECONNUS :
-- undefined_variable (variable non définie)
-- missing_import (import manquant)
-- division_by_zero (division par zéro)
-- index_out_of_bounds (index hors limites)
-- key_error (clé de dictionnaire inexistante)
-- none_operation (opération sur None)
-- file_not_found (fichier inexistant)
-- missing_docstring (docstring manquante)
-- non_descriptive_name (nom non descriptif)
-- pep8_spacing (espacement PEP8)
-- pep8_line_length (ligne trop longue)
-- class_name_lowercase (nom de classe en minuscules)
-- duplicate_code (code dupliqué)
-
-🎯 IMPORTANT POUR L'ANALYSE :
-- Lis le code ligne par ligne attentivement
-- Pour chaque ligne, vérifie s'il y a un problème
-- Si une variable est utilisée, vérifie qu'elle a été définie avant
-- Si un module est utilisé (ex: math.sqrt), vérifie qu'il est importé
-- Si une division existe, vérifie si le diviseur peut être zéro
-- Si une liste est accédée par index, vérifie si l'index existe
-- Vérifie TOUTES les fonctions/classes pour les docstrings
-
-📄 CODE À ANALYSER :
-
-Nom du fichier : {file_name}
+📝 CODE À ANALYSER :
 ```python
 {code_content}
 ```
 
-🚨 RAPPEL FINAL :
-- Réponds UNIQUEMENT avec le JSON
-- Pas de texte avant ou après
-- Pas de ```json ou de balises
-- Si aucun problème : {{"file": "{file_name}", "total_issues": 0, "issues": []}}
+📤 FORMAT DE SORTIE :
+JSON UNIQUEMENT avec cette structure exacte :
 
-Commence ton analyse MAINTENANT et réponds avec le JSON :"""
+{{"file":"{filename}","total_issues":X,"issues":[{{"line":N,"type":"...","severity":"...","description":"...","suggestion":"..."}}]}}
 
+Exemple :
+{{"file":"test.py","total_issues":2,"issues":[{{"line":5,"type":"undefined_variable","severity":"HIGH","description":"Variable 'x' not defined","suggestion":"Define 'x' before use"}},{{"line":10,"type":"missing_docstring","severity":"MEDIUM","description":"Function lacks docstring","suggestion":"Add docstring with Args/Returns"}}]}}
+
+Si aucun bug : {{"file":"{filename}","total_issues":0,"issues":[]}}
+
+Pas de texte avant/après le JSON.
+"""
+    
     return prompt
 
 

@@ -8,6 +8,8 @@ import json
 from dotenv import load_dotenv
 import google.generativeai as genai
 from src.prompts.judge_prompt import get_judge_prompt
+# ✅ AJOUT DATA OFFICER : Import du système de logging
+from src.utils.logger import log_experiment, ActionType
 
 # Charge les variables d'environnement
 load_dotenv()
@@ -125,9 +127,42 @@ def test_judge_case(case_name: str, file_name: str, pytest_output: str):
         model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content(prompt)
         raw_response = response.text
+
         print(f"✅ Réponse reçue ({len(raw_response)} caractères)")
+         # ✅ AJOUT DATA OFFICER : Log de l'interaction réussie
+        log_experiment(
+            agent_name="Judge_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.DEBUG,
+            details={
+                "test_case": case_name,
+                "file_tested": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "prompt_length_chars": len(prompt),
+                "response_length_chars": len(raw_response),
+                "pytest_output_lines": len(pytest_output.splitlines())
+            },
+            status="SUCCESS"
+        )
+        
     except Exception as e:
         print(f"❌ Erreur lors de l'appel API : {e}")
+         # ✅ AJOUT DATA OFFICER : Log de l'erreur API
+        log_experiment(
+            agent_name="Judge_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.DEBUG,
+            details={
+                "test_case": case_name,
+                "file_tested": file_name,
+                "input_prompt": prompt,
+                "output_response": "",
+                "error_type": type(e).__name__,
+                "error_message": str(e)
+            },
+            status="ERROR"
+        )
         return
     
     # Affiche la réponse brute
@@ -151,6 +186,26 @@ def test_judge_case(case_name: str, file_name: str, pytest_output: str):
         
         result = json.loads(cleaned)
         print("\n✅ JSON VALIDE !")
+          # ✅ AJOUT DATA OFFICER : Log enrichi avec résultats du parsing
+        log_experiment(
+            agent_name="Judge_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.DEBUG,
+            details={
+                "test_case": case_name,
+                "file_tested": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "parsing_status": "SUCCESS",
+                "json_valid": True,
+                "decision": result.get('decision', 'N/A'),
+                "total_tests": result.get('total_tests', 0),
+                "passed_tests": result.get('passed', 0),
+                "failed_tests": result.get('failed', 0),
+                "errors_count": len(result.get('errors', []))
+            },
+            status="SUCCESS"
+        )
         
         # Affiche les résultats
         print(f"\n📊 RÉSULTAT DE L'ANALYSE :")
@@ -180,6 +235,24 @@ def test_judge_case(case_name: str, file_name: str, pytest_output: str):
     except json.JSONDecodeError as e:
         print(f"\n❌ ERREUR : JSON INVALIDE !")
         print(f"   Erreur : {e}")
+                # ✅ AJOUT DATA OFFICER : Log de l'échec du parsing
+        log_experiment(
+            agent_name="Judge_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.DEBUG,
+            details={
+                "test_case": case_name,
+                "file_tested": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "parsing_status": "FAILED",
+                "json_valid": False,
+                "parsing_error_type": type(e).__name__,
+                "parsing_error_message": str(e)
+            },
+            status="PARTIAL"
+        )
+
         
         # Sauvegarde la réponse brute
         error_file = f"debug_judge_{case_name.lower().replace(' ', '_')}.txt"
@@ -211,6 +284,8 @@ def main():
         print("\n")
     
     print("✅ TOUS LES TESTS TERMINÉS !\n")
+    print("\n📊 Les logs d'expérimentation ont été enregistrés dans logs/experiment_data.json")
+    print("💡 Lancez 'python validate_logs.py' pour valider le format des logs\n")
     
     # Résumé
     print("=" * 80)

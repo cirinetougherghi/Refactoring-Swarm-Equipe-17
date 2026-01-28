@@ -8,6 +8,8 @@ import json
 from dotenv import load_dotenv
 import google.generativeai as genai
 from src.prompts.auditor_prompt import get_auditor_prompt
+# ✅ AJOUT DATA OFFICER : Import du système de logging
+from src.utils.logger import log_experiment, ActionType
 
 # Charge les variables d'environnement
 load_dotenv()
@@ -57,9 +59,38 @@ def test_auditor_on_file(file_path: str):
         raw_response = response.text
         
         print(f"✅ Réponse reçue ({len(raw_response)} caractères)")
+           # ✅ AJOUT DATA OFFICER : Log de l'interaction réussie avec Gemini
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "prompt_length_chars": len(prompt),
+                "response_length_chars": len(raw_response),
+                "code_lines_analyzed": len(code_content.splitlines())
+            },
+            status="SUCCESS"
+        )
         
     except Exception as e:
         print(f"❌ Erreur lors de l'appel API : {e}")
+         # ✅ AJOUT DATA OFFICER : Log de l'erreur API
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": prompt,
+                "output_response": "",
+                "error_type": type(e).__name__,
+                "error_message": str(e)
+            },
+            status="ERROR"
+        )
         return
     
     # 4. Affiche la réponse brute
@@ -86,13 +117,36 @@ def test_auditor_on_file(file_path: str):
     try:
         result = json.loads(cleaned_response)
         print("✅ JSON VALIDE !")
-        
+
+         # ✅ AJOUT DATA OFFICER : Log enrichi avec résultats du parsing
+        issues = result.get('issues', [])
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "parsing_status": "SUCCESS",
+                "json_valid": True,
+                "total_issues_found": result.get('total_issues', 0),
+                "issues_breakdown": {
+                    "critical": sum(1 for i in issues if i.get('severity') == 'CRITICAL'),
+                    "major": sum(1 for i in issues if i.get('severity') == 'MAJOR'),
+                    "minor": sum(1 for i in issues if i.get('severity') == 'MINOR')
+                }
+            },
+            status="SUCCESS"
+        )
+
         # Affiche les résultats
         print(f"\n📊 RÉSULTATS :")
         print(f"   Fichier analysé : {result.get('file', 'N/A')}")
         print(f"   Total de problèmes : {result.get('total_issues', 0)}")
         
         issues = result.get('issues', [])
+        
         if issues:
             print(f"\n🐛 BUGS DÉTECTÉS ({len(issues)}) :")
             for i, issue in enumerate(issues, 1):
@@ -114,6 +168,22 @@ def test_auditor_on_file(file_path: str):
         print(f"❌ ERREUR : JSON INVALIDE !")
         print(f"   Erreur : {e}")
         print(f"\n⚠️  PROBLÈME : Gemini a ajouté du texte avant/après le JSON")
+          # ✅ AJOUT DATA OFFICER : Log de l'échec du parsing
+        log_experiment(
+            agent_name="Auditor_Agent",
+            model_used="gemini-2.5-flash",
+            action=ActionType.ANALYSIS,
+            details={
+                "file_analyzed": file_name,
+                "input_prompt": prompt,
+                "output_response": raw_response,
+                "parsing_status": "FAILED",
+                "json_valid": False,
+                "parsing_error_type": type(e).__name__,
+                "parsing_error_message": str(e)
+            },
+            status="PARTIAL"
+        )
         print(f"   ou le JSON est mal formé.")
         
         # Sauvegarde la réponse brute pour analyse
@@ -134,10 +204,10 @@ def main():
     
     # Liste des fichiers à tester
     test_files = [
-        "sandbox/test_samples/buggy_code_simple.py",
-        "sandbox/test_samples/buggy_code_medium.py",
-         "sandbox/test_samples/clean_code.py",
-       
+         "sandbox/test_samples/buggy_code_simple.py",  
+         "sandbox/test_samples/buggy_code_medium.py", 
+         "sandbox/test_samples/buggy_code_complex.py",
+         "sandbox/test_samples/buggy_code_edge_cases.py",
     ]
     
     for file_path in test_files:
@@ -145,7 +215,8 @@ def main():
         print("\n")
     
     print("✅ TESTS TERMINÉS !\n")
-
+    print("\n📊 Les logs d'expérimentation ont été enregistrés dans logs/experiment_data.json")
+    print("💡 Lancez 'python validate_logs.py' pour valider le format des logs\n")
 
 if __name__ == "__main__":
     main()
