@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from src.utils.logger import log_experiment, ActionType
 
 
 def get_sandbox_path():
@@ -41,9 +42,44 @@ def is_safe_path(filepath):
         sandbox = get_sandbox_path()
         
         # Vérifier si le fichier est dans sandbox ou un sous-dossier
-        return str(abs_filepath).startswith(str(sandbox))
+        is_safe = str(abs_filepath).startswith(str(sandbox))
+        
+        # Log security check
+        log_experiment(
+            agent_name="Security_Validator",
+            model_used="N/A",
+            action=ActionType.ANALYSIS,
+            details={
+                "operation": "path_security_check",
+                "filepath_requested": filepath,
+                "input_prompt": f"Validating path security for: {filepath}",
+                "output_response": f"Path is {'SAFE (inside sandbox)' if is_safe else 'BLOCKED (outside sandbox)'}",
+                "is_safe": is_safe,
+                "absolute_path": str(abs_filepath),
+                "sandbox_root": str(sandbox)
+            },
+            status="SUCCESS" if is_safe else "FAILURE"
+        )
+        
+        return is_safe
         
     except Exception as e:
+        # Log error
+        log_experiment(
+            agent_name="Security_Validator",
+            model_used="N/A",
+            action=ActionType.DEBUG,
+            details={
+                "operation": "path_security_check",
+                "filepath_requested": filepath,
+                "input_prompt": f"Validating path security for: {filepath}",
+                "output_response": f"Security check failed: {str(e)}",
+                "error_type": type(e).__name__,
+                "error_message": str(e)
+            },
+            status="FAILURE"
+        )
+        
         print(f"Erreur lors de la vérification du chemin: {e}")
         return False
 
@@ -59,12 +95,48 @@ def validate_path_or_raise(filepath, operation="read"):
     Raises:
         SecurityError: Si le chemin est en dehors de sandbox
     """
-    if not is_safe_path(filepath):
-        raise SecurityError(
+    is_safe = is_safe_path(filepath)
+    
+    if not is_safe:
+        error_message = (
             f"SECURITE: Tentative d'accès interdit en dehors de sandbox!\n"
             f"Chemin demandé: {filepath}\n"
             f"Opération: {operation}"
         )
+        
+        # Log security violation attempt
+        log_experiment(
+            agent_name="Security_Enforcer",
+            model_used="N/A",
+            action=ActionType.DEBUG,
+            details={
+                "operation": "security_enforcement",
+                "filepath_blocked": filepath,
+                "operation_type": operation,
+                "input_prompt": f"Enforcing security for {operation} operation on: {filepath}",
+                "output_response": f"BLOCKED: Access denied - path outside sandbox",
+                "violation_type": "path_traversal_attempt"
+            },
+            status="FAILURE"
+        )
+        
+        raise SecurityError(error_message)
+    
+    # Log successful validation
+    log_experiment(
+        agent_name="Security_Enforcer",
+        model_used="N/A",
+        action=ActionType.ANALYSIS,
+        details={
+            "operation": "security_enforcement",
+            "filepath_validated": filepath,
+            "operation_type": operation,
+            "input_prompt": f"Enforcing security for {operation} operation on: {filepath}",
+            "output_response": f"ALLOWED: Path validated and safe",
+            "access_granted": True
+        },
+        status="SUCCESS"
+    )
 
 
 class SecurityError(Exception):
