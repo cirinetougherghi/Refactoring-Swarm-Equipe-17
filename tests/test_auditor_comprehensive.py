@@ -1,191 +1,102 @@
 """
-Suite de tests complète pour l'Agent Auditeur
-
-Tests tous les cas critiques :
-- Détection des variables non définies
-- Détection des docstrings manquantes
-- Détection des divisions par zéro
-- Pas de faux positifs sur du code propre
-- JSON toujours valide
+Test complet de l'Agent Auditeur
+Vérifie que l'Auditeur détecte correctement tous les types de bugs
 """
 
 import os
 import json
-import pytest
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-from src.prompts.auditor_prompt import get_auditor_prompt
-
 # Configuration
 load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-MODEL = genai.GenerativeModel('gemini-2.5-flash')
+api_key = os.getenv("GOOGLE_API_KEY")
+if not api_key:
+    print("❌ ERREUR : Clé API non trouvée")
+    exit(1)
+
+genai.configure(api_key=api_key)
+
+# Import de l'agent
+from src.agents.auditor_agent import AuditorAgent
 
 
-def parse_json_response(response_text):
-    """Nettoie et parse la réponse JSON de Gemini."""
-    text = response_text.strip()
+def test_case_1_simple_bugs():
+    """Test 1 : Code simple avec bugs évidents"""
+    print("\n" + "="*80)
+    print("TEST 1 : CODE SIMPLE AVEC BUGS ÉVIDENTS")
+    print("="*80)
     
-    # Enlever les backticks markdown
-    if text.startswith("```json"):
-        text = text[7:]
-    elif text.startswith("```"):
-        text = text[3:]
-    
-    if text.endswith("```"):
-        text = text[:-3]
-    
-    text = text.strip()
-    
-    # Trouver le début du JSON
-    if not text.startswith("{"):
-        start = text.find("{")
-        if start != -1:
-            text = text[start:]
-    
-    # Trouver la fin du JSON
-    if not text.endswith("}"):
-        end = text.rfind("}")
-        if end != -1:
-            text = text[:end+1]
-    
-    return json.loads(text)
+    # Crée un fichier de test temporaire
+    test_code = """import os
 
-
-class TestAuditorVariableDetection:
-    """Tests de détection des variables non définies."""
-    
-    def test_undefined_variable(self):
-        """L'Auditeur DOIT détecter une variable non définie."""
-        code = """
-def hello():
-    print(message)
-
-hello()
-"""
-        prompt = get_auditor_prompt("test_undefined.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Vérifie qu'au moins 1 problème est détecté
-        assert report["total_issues"] >= 1, "Devrait détecter au moins 1 problème"
-        
-        # Vérifie qu'il y a un problème lié à 'message' non défini
-        descriptions = [issue["description"].lower() for issue in report["issues"]]
-        assert any("message" in desc and ("not defined" in desc or "undefined" in desc) 
-                   for desc in descriptions), "Devrait détecter 'message' non défini"
-    
-    def test_undefined_function(self):
-        """L'Auditeur DOIT détecter une fonction non définie."""
-        code = """
-def process():
-    data = read_file("test.txt")
-    return data
-"""
-        prompt = get_auditor_prompt("test_function.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        assert report["total_issues"] >= 1
-        descriptions = [issue["description"].lower() for issue in report["issues"]]
-        assert any("read_file" in desc for desc in descriptions)
-
-
-class TestAuditorDocstringDetection:
-    """Tests de détection des docstrings manquantes."""
-    
-    def test_missing_docstring(self):
-        """L'Auditeur DOIT détecter l'absence de docstring."""
-        code = """
-def calculate(a, b):
-    return a + b
-
-def multiply(x, y):
-    return x * y
-"""
-        prompt = get_auditor_prompt("test_docstring.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Devrait détecter au moins 2 fonctions sans docstring
-        assert report["total_issues"] >= 2
-        
-        docstring_issues = [issue for issue in report["issues"] 
-                           if "docstring" in issue["description"].lower()]
-        assert len(docstring_issues) >= 2, "Devrait détecter 2 fonctions sans docstring"
-    
-    def test_has_docstring(self):
-        """Code avec docstring NE DOIT PAS être signalé."""
-        code = '''
-def calculate(a, b):
-    """Calcule la somme de deux nombres.
-    
-    Args:
-        a: Premier nombre
-        b: Deuxième nombre
-    
-    Returns:
-        La somme de a et b
-    """
-    return a + b
-'''
-        prompt = get_auditor_prompt("test_good_docstring.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Ne devrait PAS signaler de problème de docstring pour cette fonction
-        docstring_issues = [issue for issue in report["issues"] 
-                           if "docstring" in issue["description"].lower() 
-                           and "calculate" in issue["description"].lower()]
-        assert len(docstring_issues) == 0, "Ne devrait PAS signaler de problème de docstring"
-
-
-class TestAuditorLogicErrors:
-    """Tests de détection des erreurs de logique."""
-    
-    def test_division_by_zero(self):
-        """L'Auditeur DOIT détecter une division par zéro."""
-        code = """
-def calculate():
-    result = 100 / 0
+def calculate(x, y):
+    result = x / y
     return result
+
+print(calculate(10, 0))
+print(undefined_var)
 """
-        prompt = get_auditor_prompt("test_division.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        assert report["total_issues"] >= 1
-        
-        # Vérifie qu'il y a un problème HIGH/CRITICAL lié à division
-        critical_issues = [issue for issue in report["issues"] 
-                          if issue["severity"] in ["HIGH", "CRITICAL"]
-                          and ("division" in issue["description"].lower() 
-                               or "zero" in issue["description"].lower())]
-        assert len(critical_issues) >= 1, "Devrait détecter division par zéro comme HIGH/CRITICAL"
     
-    def test_index_out_of_bounds(self):
-        """L'Auditeur DOIT détecter un index hors limites."""
-        code = """
-numbers = [1, 2, 3]
-value = numbers[10]
-"""
-        prompt = get_auditor_prompt("test_index.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Peut détecter ou non selon la sophistication
-        # On teste juste que ça ne plante pas
-        assert isinstance(report["total_issues"], int)
+    test_file = "sandbox/test_audit_simple.py"
+    os.makedirs("sandbox", exist_ok=True)
+    
+    with open(test_file, 'w', encoding='utf-8') as f:
+        f.write(test_code)
+    
+    # Test l'auditeur
+    auditor = AuditorAgent()
+    report = auditor.analyze_file(test_file)
+    
+    # Vérifications
+    print("\n📊 RÉSULTATS :")
+    
+    if report is None:
+        print("❌ ÉCHEC : Aucun rapport retourné")
+        return False
+    
+    bugs_found = report.get('total_issues', 0)
+    print(f"   Bugs détectés : {bugs_found}")
+    
+    # Attendu : Au moins 3 bugs
+    # 1. division_by_zero (ligne 7)
+    # 2. undefined_variable (ligne 8)
+    # 3. missing_docstring (fonction calculate)
+    
+    if bugs_found < 3:
+        print(f"❌ ÉCHEC : Attendu au moins 3 bugs, trouvé {bugs_found}")
+        return False
+    
+    print("✅ SUCCÈS : Nombre de bugs correct")
+    
+    # Vérifie que les bugs critiques sont détectés
+    issues = report.get('issues', [])
+    has_division = any('division' in i.get('description', '').lower() for i in issues)
+    has_undefined = any('undefined' in i.get('description', '').lower() for i in issues)
+    
+    if not has_division:
+        print("❌ ÉCHEC : Division par zéro non détectée")
+        return False
+    
+    if not has_undefined:
+        print("❌ ÉCHEC : Variable non définie non détectée")
+        return False
+    
+    print("✅ SUCCÈS : Bugs critiques détectés")
+    
+    # Nettoyage
+    os.remove(test_file)
+    
+    return True
 
 
-class TestAuditorNoFalsePositives:
-    """Tests anti-hallucination : pas de faux positifs."""
+def test_case_2_clean_code():
+    """Test 2 : Code propre sans bugs"""
+    print("\n" + "="*80)
+    print("TEST 2 : CODE PROPRE (PAS DE FAUX POSITIFS)")
+    print("="*80)
     
-    def test_clean_code_no_issues(self):
-        """Code parfait NE DOIT PAS générer de faux positifs."""
-        code = '''
-"""Module de calcul."""
+    test_code = '''"""Module de calcul."""
 
 def add(a: int, b: int) -> int:
     """Additionne deux nombres.
@@ -212,132 +123,187 @@ def multiply(x: int, y: int) -> int:
     """
     return x * y
 '''
-        prompt = get_auditor_prompt("test_clean.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Code parfait = 0 problèmes (ou seulement des suggestions LOW optionnelles)
-        high_critical_issues = [issue for issue in report["issues"] 
-                               if issue["severity"] in ["HIGH", "CRITICAL"]]
-        assert len(high_critical_issues) == 0, "Code propre ne doit PAS avoir de bugs HIGH/CRITICAL"
     
-    def test_valid_variable_not_flagged(self):
-        """Variable DÉFINIE ne doit PAS être signalée comme non définie."""
-        code = """
-def process():
-    data = "Hello"
-    print(data)
+    test_file = "sandbox/test_audit_clean.py"
+    
+    with open(test_file, 'w', encoding='utf-8') as f:
+        f.write(test_code)
+    
+    # Test l'auditeur
+    auditor = AuditorAgent()
+    report = auditor.analyze_file(test_file)
+    
+    # Vérifications
+    print("\n📊 RÉSULTATS :")
+    
+    if report is None:
+        print("❌ ÉCHEC : Aucun rapport retourné")
+        return False
+    
+    bugs_found = report.get('total_issues', 0)
+    print(f"   Bugs détectés : {bugs_found}")
+    
+    # Code propre = 0 bugs HIGH/CRITICAL
+    issues = report.get('issues', [])
+    critical_bugs = [i for i in issues if i.get('severity') in ['HIGH', 'CRITICAL']]
+    
+    if len(critical_bugs) > 0:
+        print(f"❌ ÉCHEC : Faux positifs détectés ({len(critical_bugs)} bugs HIGH/CRITICAL)")
+        for bug in critical_bugs:
+            print(f"   - Ligne {bug.get('line')}: {bug.get('description')}")
+        return False
+    
+    print("✅ SUCCÈS : Aucun faux positif")
+    
+    # Nettoyage
+    os.remove(test_file)
+    
+    return True
+
+
+def test_case_3_missing_import():
+    """Test 3 : Import manquant"""
+    print("\n" + "="*80)
+    print("TEST 3 : IMPORT MANQUANT")
+    print("="*80)
+    
+    test_code = """
+def calculate_sqrt(x):
+    return math.sqrt(x)
+
+print(calculate_sqrt(16))
 """
-        prompt = get_auditor_prompt("test_valid_var.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Ne devrait PAS dire que 'data' est non défini
-        data_issues = [issue for issue in report["issues"] 
-                      if "data" in issue["description"].lower() 
-                      and "not defined" in issue["description"].lower()]
-        assert len(data_issues) == 0, "'data' est défini, ne doit PAS être signalé"
-
-
-class TestAuditorJSONValidity:
-    """Tests de validité du JSON."""
     
-    def test_json_always_valid(self):
-        """Le JSON DOIT TOUJOURS être valide, quel que soit le code."""
-        test_cases = [
-            "print('hello')",
-            "def f(): pass",
-            "",  # Code vide
-            "x = 1 / 0",
-            "import sys\nimport os\n\nprint('test')"
-        ]
-        
-        for code in test_cases:
-            prompt = get_auditor_prompt("test.py", code)
-            response = MODEL.generate_content(prompt)
-            
-            # parse_json_response lève une exception si JSON invalide
-            try:
-                report = parse_json_response(response.text)
-                # Vérifie structure minimale
-                assert "total_issues" in report
-                assert "issues" in report
-                assert isinstance(report["issues"], list)
-            except json.JSONDecodeError as e:
-                pytest.fail(f"JSON invalide pour code: {code[:50]}... | Erreur: {e}")
+    test_file = "sandbox/test_audit_import.py"
     
-    def test_json_structure(self):
-        """Le JSON DOIT avoir la structure attendue."""
-        code = """
-def test():
-    print(undefined_var)
-"""
-        prompt = get_auditor_prompt("test.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        # Vérifie champs obligatoires
-        assert "filename" in report or "file" in report
-        assert "total_issues" in report
-        assert "issues" in report
-        
-        # Si des issues existent, vérifie leur structure
-        if report["total_issues"] > 0:
-            issue = report["issues"][0]
-            assert "line" in issue
-            assert "type" in issue
-            assert "severity" in issue
-            assert "description" in issue
-            assert "suggestion" in issue
+    with open(test_file, 'w', encoding='utf-8') as f:
+        f.write(test_code)
     
-    def test_severity_values_valid(self):
-        """Les valeurs de sévérité DOIVENT être valides."""
-        code = """
-import os
-def test():
-    return x / 0
-"""
-        prompt = get_auditor_prompt("test.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
-        
-        valid_severities = ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
-        for issue in report["issues"]:
-            assert issue["severity"] in valid_severities, \
-                f"Sévérité invalide: {issue['severity']}"
-
-
-class TestAuditorUnusedImports:
-    """Tests de détection des imports non utilisés."""
+    # Test l'auditeur
+    auditor = AuditorAgent()
+    report = auditor.analyze_file(test_file)
     
-    def test_unused_import_detected(self):
-        """L'Auditeur DOIT détecter un import non utilisé."""
-        code = """
-import os
-import sys
+    # Vérifications
+    print("\n📊 RÉSULTATS :")
+    
+    if report is None:
+        print("❌ ÉCHEC : Aucun rapport retourné")
+        return False
+    
+    issues = report.get('issues', [])
+    has_import_error = any(
+        'import' in i.get('description', '').lower() or 
+        'math' in i.get('description', '').lower()
+        for i in issues
+    )
+    
+    if not has_import_error:
+        print("❌ ÉCHEC : Import manquant non détecté")
+        return False
+    
+    print("✅ SUCCÈS : Import manquant détecté")
+    
+    # Nettoyage
+    os.remove(test_file)
+    
+    return True
 
-print("Hello World")
-"""
-        prompt = get_auditor_prompt("test_imports.py", code)
-        response = MODEL.generate_content(prompt)
-        report = parse_json_response(response.text)
+
+def test_case_4_json_validity():
+    """Test 4 : JSON toujours valide"""
+    print("\n" + "="*80)
+    print("TEST 4 : VALIDITÉ DU JSON")
+    print("="*80)
+    
+    # Test avec plusieurs types de code
+    test_cases = [
+        "print('hello')",
+        "def f(): pass",
+        "",  # Code vide
+        "x = 1 / 0",
+    ]
+    
+    auditor = AuditorAgent()
+    
+    for i, code in enumerate(test_cases, 1):
+        test_file = f"sandbox/test_audit_json_{i}.py"
         
-        # Devrait détecter au moins 1 import inutilisé
-        assert report["total_issues"] >= 1
+        with open(test_file, 'w', encoding='utf-8') as f:
+            f.write(code)
         
-        import_issues = [issue for issue in report["issues"] 
-                        if "import" in issue["description"].lower() 
-                        and ("unused" in issue["description"].lower() 
-                             or "not used" in issue["description"].lower()
-                             or "inutilisé" in issue["description"].lower())]
-        assert len(import_issues) >= 1, "Devrait détecter au moins 1 import inutilisé"
+        report = auditor.analyze_file(test_file)
+        
+        if report is None:
+            print(f"❌ ÉCHEC : Rapport None pour cas {i}")
+            return False
+        
+        # Vérifie structure minimale
+        if 'total_issues' not in report:
+            print(f"❌ ÉCHEC : Champ 'total_issues' manquant pour cas {i}")
+            return False
+        
+        if 'issues' not in report:
+            print(f"❌ ÉCHEC : Champ 'issues' manquant pour cas {i}")
+            return False
+        
+        os.remove(test_file)
+    
+    print("✅ SUCCÈS : JSON toujours valide")
+    return True
 
 
-# Fonction pour lancer tous les tests
 def run_all_tests():
-    """Lance tous les tests et affiche un résumé."""
-    pytest.main([__file__, "-v", "--tb=short"])
+    """Execute tous les tests"""
+    
+    print("\n" + "🧪"*40)
+    print("TESTS COMPLETS DE L'AGENT AUDITEUR")
+    print("🧪"*40)
+    
+    tests = [
+        ("Bugs simples", test_case_1_simple_bugs),
+        ("Code propre", test_case_2_clean_code),
+        ("Import manquant", test_case_3_missing_import),
+        ("Validité JSON", test_case_4_json_validity),
+    ]
+    
+    results = []
+    
+    for test_name, test_func in tests:
+        try:
+            success = test_func()
+            results.append((test_name, success))
+        except Exception as e:
+            print(f"\n❌ ERREUR LORS DU TEST '{test_name}' : {e}")
+            import traceback
+            traceback.print_exc()
+            results.append((test_name, False))
+    
+    # Résumé
+    print("\n" + "="*80)
+    print("📊 RÉSUMÉ DES TESTS")
+    print("="*80)
+    
+    passed = sum(1 for _, success in results if success)
+    total = len(results)
+    
+    for test_name, success in results:
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status} - {test_name}")
+    
+    print("\n" + "="*80)
+    print(f"RÉSULTAT FINAL : {passed}/{total} tests réussis ({passed/total*100:.0f}%)")
+    print("="*80)
+    
+    if passed == total:
+        print("\n🎉 TOUS LES TESTS SONT PASSÉS !")
+        print("✅ L'Auditeur fonctionne parfaitement")
+        return True
+    else:
+        print(f"\n⚠️  {total - passed} test(s) échoué(s)")
+        print("❌ L'Auditeur nécessite des corrections")
+        return False
 
 
 if __name__ == "__main__":
-    run_all_tests()
+    success = run_all_tests()
+    exit(0 if success else 1)

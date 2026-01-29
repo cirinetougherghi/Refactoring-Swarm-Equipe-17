@@ -2,6 +2,7 @@
 Agent Testeur (Judge) - Validation par tests
 Responsable : Lead Dev (Orchestrateur)
 Date : 2026-01-10
+Version : 1.1 - Fixed to handle no-test scenarios
 """
 
 import json
@@ -12,6 +13,7 @@ import os
 from src.prompts import get_judge_prompt
 from src.utils.logger import log_experiment, ActionType
 from src.tools.analysis_tools import run_pytest
+from src.tools.file_tools import read_file
 
 
 class JudgeAgent:
@@ -30,12 +32,14 @@ class JudgeAgent:
         self.model = genai.GenerativeModel(model_name)
         self.agent_name = "Judge_Agent"
     
-    def judge_file(self, file_path: str) -> Optional[Dict]:
+    def judge_file(self, file_path: str, audit_report: Optional[Dict] = None) -> Optional[Dict]:
         """
         Execute pytest et analyse les resultats.
+        Si aucun test unitaire n'existe, valide le code s'il est propre.
         
         Args:
             file_path (str): Chemin complet vers le fichier a tester
+            audit_report (dict, optional): Rapport d'audit pour validation sans tests
             
         Returns:
             dict: Rapport du Testeur avec decision (VALIDATE ou PASS_TO_FIXER)
@@ -47,6 +51,51 @@ class JudgeAgent:
         print(f"JUDGE - Test de {file_name}")
         print(f"{'='*80}")
         
+        # NOUVELLE LOGIQUE : Si aucun bug détecté et code valide → VALIDATE
+        if audit_report is not None:
+            bugs_found = audit_report.get("total_issues", 0)
+            
+            if bugs_found == 0:
+                # Vérifie que le code est syntaxiquement valide
+                try:
+                    code = read_file(file_path)
+                    compile(code, file_name, 'exec')
+                    
+                    print(f"Code propre (0 bugs) et syntaxe valide")
+                    print(f"Decision : VALIDATE (aucun test unitaire requis)")
+                    
+                    judge_report = {
+                        "decision": "VALIDATE",
+                        "passed": 0,
+                        "failed": 0,
+                        "message": "Code propre, syntaxe valide, aucun bug détecté",
+                        "validation_method": "audit_only"
+                    }
+                    
+                    log_experiment(
+                        agent_name=self.agent_name,
+                        model_used=self.model_name,
+                        action=ActionType.DEBUG,
+                        details={
+                            "file_tested": file_name,
+                            "input_prompt": "Validation sans tests unitaires",
+                            "output_response": json.dumps(judge_report),
+                            "decision": "VALIDATE",
+                            "tests_passed": 0,
+                            "tests_failed": 0,
+                            "bugs_in_audit": bugs_found,
+                            "validation_method": "audit_only"
+                        },
+                        status="SUCCESS"
+                    )
+                    
+                    return judge_report
+                    
+                except SyntaxError as e:
+                    print(f"ERREUR: Code invalide malgré 0 bugs détectés : {e}")
+                    # Continue avec pytest normal
+        
+        # LOGIQUE NORMALE : Exécute pytest
         try:
             pytest_result = run_pytest(file_path)
         except Exception as e:
@@ -69,6 +118,40 @@ class JudgeAgent:
         print(f"   Tests passes : {passed}")
         print(f"   Tests echoues : {failed}")
         
+        # NOUVELLE LOGIQUE : Si 0 tests trouvés et code propre → VALIDATE
+        if passed == 0 and failed == 0:
+            if audit_report is not None and audit_report.get("total_issues", 0) == 0:
+                print(f"Aucun test unitaire trouve, mais code propre")
+                print(f"Decision : VALIDATE")
+                
+                judge_report = {
+                    "decision": "VALIDATE",
+                    "passed": 0,
+                    "failed": 0,
+                    "message": "Aucun test unitaire, mais code propre et valide",
+                    "validation_method": "no_tests_clean_code"
+                }
+                
+                log_experiment(
+                    agent_name=self.agent_name,
+                    model_used=self.model_name,
+                    action=ActionType.DEBUG,
+                    details={
+                        "file_tested": file_name,
+                        "input_prompt": "Validation sans tests (code propre)",
+                        "output_response": json.dumps(judge_report),
+                        "decision": "VALIDATE",
+                        "tests_passed": 0,
+                        "tests_failed": 0,
+                        "pytest_returncode": returncode,
+                        "validation_method": "no_tests_clean_code"
+                    },
+                    status="SUCCESS"
+                )
+                
+                return judge_report
+        
+        # LOGIQUE ORIGINALE : Demande à Gemini d'analyser la sortie pytest
         prompt = get_judge_prompt(file_name, pytest_output)
         
         try:

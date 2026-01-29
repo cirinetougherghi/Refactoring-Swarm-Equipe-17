@@ -2,6 +2,7 @@
 Orchestrateur - Gestion du workflow multi-agents
 Responsable : Lead Dev (Orchestrateur)
 Date : 2026-01-10
+Version : 1.1 - Pass audit_report to judge for better validation
 """
 
 import os
@@ -158,13 +159,14 @@ class Orchestrator:
             if bugs_found == 0:
                 print(f"Code propre - Aucun bug detecte")
                 
-                judge_report = self.judge.judge_file(file_path)
+                # ✅ CHANGEMENT ICI : Passer audit_report au judge
+                judge_report = self.judge.judge_file(file_path, audit_report)
                 
                 if judge_report and judge_report.get("decision") == "VALIDATE":
                     state.status = "VALIDATED"
                     state.judge_report = judge_report
                     self.files_validated += 1
-                    print(f"\n{file_name} VALIDE !")
+                    print(f"\n✅ {file_name} VALIDE !")
                     break
                 else:
                     print(f"ATTENTION: Tests ont echoue malgre l'absence de bugs detectes")
@@ -183,7 +185,8 @@ class Orchestrator:
             state.total_bugs_fixed += bugs_found
             
             # ETAPE 3 : TEST
-            judge_report = self.judge.judge_file(file_path)
+            # ✅ CHANGEMENT ICI : Passer audit_report au judge
+            judge_report = self.judge.judge_file(file_path, audit_report)
             
             if judge_report is None:
                 print(f"ERREUR: Test echoue - Arret du traitement")
@@ -196,7 +199,7 @@ class Orchestrator:
             if decision == "VALIDATE":
                 state.status = "VALIDATED"
                 self.files_validated += 1
-                print(f"\n{file_name} VALIDE !")
+                print(f"\n✅ {file_name} VALIDE !")
                 break
             
             elif decision == "PASS_TO_FIXER":
