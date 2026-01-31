@@ -2056,5 +2056,579 @@
             "final_status": "FAILED"
         },
         "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "39a29c14-8d59-420e-9d3f-9008ea20a9b2",
+        "timestamp": "2026-01-30T19:36:21.311690",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "buggy_calculator.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : buggy_calculator.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n\"\"\"Module de calcul avec bugs intentionnels\"\"\"\n\ndef calculate_average(numbers):\n    total = sum(numbers)\n    count = len(numbers)\n    result = total / count\n    return result\n\ndef process_data(data):\n    result = []\n    for item in data:\n        processed = item * 2 + undefined_variable\n        result.append(processed)\n    return result\n\ndef divide_numbers(a, b):\n    return a / b\n\nif __name__ == \"__main__\":\n    # Test 1 : Division par zéro\n    print(divide_numbers(10, 0))\n    \n    # Test 2 : Variable non définie\n    print(process_data([1, 2, 3]))\n    \n    # Test 3 : Liste vide\n    print(calculate_average([]))\n\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"buggy_calculator.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"buggy_calculator.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "Timeout of 60.0s exceeded, last exception: 503 DNS resolution failed for generativelanguage.googleapis.com:443: UNAVAILABLE: getaddrinfo: WSA Error (Unable to retrieve error string -- 11001)"
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "26b96274-d823-4714-ac17-9b2e1225033d",
+        "timestamp": "2026-01-30T19:47:57.431203",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "buggy_calculator.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : buggy_calculator.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n\"\"\"Module de calcul avec bugs intentionnels\"\"\"\n\ndef calculate_average(numbers):\n    total = sum(numbers)\n    count = len(numbers)\n    result = total / count\n    return result\n\ndef process_data(data):\n    result = []\n    for item in data:\n        processed = item * 2 + undefined_variable\n        result.append(processed)\n    return result\n\ndef divide_numbers(a, b):\n    return a / b\n\nif __name__ == \"__main__\":\n    # Test 1 : Division par zéro\n    print(divide_numbers(10, 0))\n    \n    # Test 2 : Variable non définie\n    print(process_data([1, 2, 3]))\n    \n    # Test 3 : Liste vide\n    print(calculate_average([]))\n\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"buggy_calculator.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"buggy_calculator.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "Timeout of 60.0s exceeded, last exception: 503 DNS resolution failed for generativelanguage.googleapis.com:443: UNAVAILABLE: getaddrinfo: WSA Error (Unable to retrieve error string -- 11001)"
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "1024bd67-966c-4619-afcb-98b736a8a505",
+        "timestamp": "2026-01-30T19:47:57.527620",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "buggy_calculator.py",
+            "input_prompt": "Process file: buggy_calculator.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "26422509-6e64-4e01-8415-665d36b7767d",
+        "timestamp": "2026-01-31T03:19:58.912345",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_complex.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_complex.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef MyFunction(x,y,z):\n    temp=x+y\n    if temp>10 :\n        return temp/z\n    else:\n        return temp*z\n    \n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_complex.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_complex.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "ce6c45f5-d2ed-495e-89c7-7d593687260c",
+        "timestamp": "2026-01-31T03:19:58.988242",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_complex.py",
+            "input_prompt": "Process file: bug_complex.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "59716ece-5c30-43db-9e57-091c37bad2a6",
+        "timestamp": "2026-01-31T03:19:59.187738",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_imports.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_imports.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Import inutile , variables globales\nimport math\nimport random\n\nGlobal_Var = 100\n\ndef process():\n    return Global_Var * 2\n\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_imports.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_imports.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "2f0cdca3-4dfb-4869-98e7-2a76f1e759a8",
+        "timestamp": "2026-01-31T03:19:59.254680",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_imports.py",
+            "input_prompt": "Process file: bug_imports.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "c92a08ad-30bc-40d6-9a2b-e7ece7253985",
+        "timestamp": "2026-01-31T03:19:59.479605",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_logic.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_logic.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef divide(a,b):\n    return a / b\n\nprint(divide(10,0))\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_logic.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_logic.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "61722e42-1806-40d7-81ec-6115ba402f06",
+        "timestamp": "2026-01-31T03:19:59.547207",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_logic.py",
+            "input_prompt": "Process file: bug_logic.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "9f2339d2-b737-46c9-a48d-6fca8d533e0b",
+        "timestamp": "2026-01-31T03:19:59.729647",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_simple.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_simple.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n#Bug : Fonction sans docstring, variable non utilisee\n\ndef calculate_sum(a,b):\n    unused_var=10\n    return a + b\nresult = calculate_sum(5,3)\nprint(result)\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_simple.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_simple.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "e472a684-2f85-4cd8-847b-27be2fdf1733",
+        "timestamp": "2026-01-31T03:19:59.795607",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_simple.py",
+            "input_prompt": "Process file: bug_simple.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "f50c74b5-a1b6-4462-976c-2c01eaa4593e",
+        "timestamp": "2026-01-31T03:19:59.962979",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_syntax.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_syntax.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Erreur de syntax (parenthese manquante)\ndef greet(name):\n    print(\"Hello\" + name \ngreet(\"Alice\")\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_syntax.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_syntax.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "79aecd2a-addd-43c3-8b6b-14db0c816831",
+        "timestamp": "2026-01-31T03:20:00.047496",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_syntax.py",
+            "input_prompt": "Process file: bug_syntax.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "d6a4c033-7f34-49b1-b95b-15bcecdeead7",
+        "timestamp": "2026-01-31T03:32:22.389823",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_complex.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_complex.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef MyFunction(x,y,z):\n    temp=x+y\n    if temp>10 :\n        return temp/z\n    else:\n        return temp*z\n    \n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_complex.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_complex.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "5be6e290-5bee-4c7f-a126-bd6e6fb5e6cc",
+        "timestamp": "2026-01-31T03:32:22.427023",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_complex.py",
+            "input_prompt": "Process file: bug_complex.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "cd1433a5-5d22-4912-870f-7e080514fe7d",
+        "timestamp": "2026-01-31T03:32:22.606080",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_imports.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_imports.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Import inutile , variables globales\nimport math\nimport random\n\nGlobal_Var = 100\n\ndef process():\n    return Global_Var * 2\n\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_imports.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_imports.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "3c849fb5-8d20-445a-b892-7b3c72392951",
+        "timestamp": "2026-01-31T03:32:22.645090",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_imports.py",
+            "input_prompt": "Process file: bug_imports.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "016e4ccd-acd4-491a-9b00-1a9cc5dae7da",
+        "timestamp": "2026-01-31T03:32:22.803700",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_logic.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_logic.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef divide(a,b):\n    return a / b\n\nprint(divide(10,0))\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_logic.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_logic.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "4be7c668-0d41-4b43-985a-eafdb0ede969",
+        "timestamp": "2026-01-31T03:32:22.876076",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_logic.py",
+            "input_prompt": "Process file: bug_logic.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "0eff2572-d4ec-46a8-902b-72c76909ef0f",
+        "timestamp": "2026-01-31T03:32:23.065507",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_simple.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_simple.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n#Bug : Fonction sans docstring, variable non utilisee\n\ndef calculate_sum(a,b):\n    unused_var=10\n    return a + b\nresult = calculate_sum(5,3)\nprint(result)\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_simple.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_simple.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "ef0bb995-a51d-4521-b2ab-be8248388afa",
+        "timestamp": "2026-01-31T03:32:23.113143",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_simple.py",
+            "input_prompt": "Process file: bug_simple.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "ca34deb4-3409-42e7-b5e1-0259da3aeeff",
+        "timestamp": "2026-01-31T03:32:23.288890",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_syntax.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_syntax.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Erreur de syntax (parenthese manquante)\ndef greet(name):\n    print(\"Hello\" + name \ngreet(\"Alice\")\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_syntax.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_syntax.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "588a4680-95e3-4fd7-b11d-1a08e05ab5a1",
+        "timestamp": "2026-01-31T03:32:23.360385",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_syntax.py",
+            "input_prompt": "Process file: bug_syntax.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "1255d6ce-da20-42ae-b880-b715ff6bd205",
+        "timestamp": "2026-01-31T03:32:37.332029",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_complex.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_complex.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef MyFunction(x,y,z):\n    temp=x+y\n    if temp>10 :\n        return temp/z\n    else:\n        return temp*z\n    \n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_complex.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_complex.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "6ea6544f-225d-4964-a54d-28b9022b92e6",
+        "timestamp": "2026-01-31T03:32:37.380996",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_complex.py",
+            "input_prompt": "Process file: bug_complex.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "67e3e084-f298-499f-b961-3869d4be49d6",
+        "timestamp": "2026-01-31T03:32:37.591291",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_imports.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_imports.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Import inutile , variables globales\nimport math\nimport random\n\nGlobal_Var = 100\n\ndef process():\n    return Global_Var * 2\n\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_imports.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_imports.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "0b0c2025-cea2-4cd5-8942-afb60c93f588",
+        "timestamp": "2026-01-31T03:32:37.656028",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_imports.py",
+            "input_prompt": "Process file: bug_imports.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "ea4a3bcc-aafc-4d8a-a80e-72184485aea7",
+        "timestamp": "2026-01-31T03:32:37.814844",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_logic.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_logic.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef divide(a,b):\n    return a / b\n\nprint(divide(10,0))\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_logic.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_logic.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "e591d8bd-0e73-4f3e-9fb8-cb9ee975109f",
+        "timestamp": "2026-01-31T03:32:37.857287",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_logic.py",
+            "input_prompt": "Process file: bug_logic.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "9b20468d-b21d-4a26-9227-57ea1d9a724b",
+        "timestamp": "2026-01-31T03:32:38.006408",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_simple.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_simple.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n#Bug : Fonction sans docstring, variable non utilisee\n\ndef calculate_sum(a,b):\n    unused_var=10\n    return a + b\nresult = calculate_sum(5,3)\nprint(result)\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_simple.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_simple.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "9f363eba-abf7-4fe0-8418-0ba7518f30a9",
+        "timestamp": "2026-01-31T03:32:38.089351",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_simple.py",
+            "input_prompt": "Process file: bug_simple.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "39b12ed8-069b-4398-9d7a-1cec5db0bc84",
+        "timestamp": "2026-01-31T03:32:38.265381",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "bug_syntax.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : bug_syntax.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\n# Bug : Erreur de syntax (parenthese manquante)\ndef greet(name):\n    print(\"Hello\" + name \ngreet(\"Alice\")\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"bug_syntax.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"bug_syntax.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "4d802fb4-046b-4d69-afb6-9b36439e8bdb",
+        "timestamp": "2026-01-31T03:32:38.332345",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "bug_syntax.py",
+            "input_prompt": "Process file: bug_syntax.py",
+            "output_response": "Status: FAILED",
+            "iterations": 1,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "978685c3-5978-4856-bcc8-ecb9975e20c2",
+        "timestamp": "2026-01-31T05:09:34.663157",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "simple.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : simple.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef calculate_sum(a, b)\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"simple.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"simple.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "944f0bb3-ff04-4e47-b26b-938de143b1a7",
+        "timestamp": "2026-01-31T05:09:34.755588",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "simple.py",
+            "input_prompt": "Process file: simple.py",
+            "output_response": "Status: FAILED",
+            "iterations": 2,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED",
+            "workflow_engine": "LangGraph_v2.0"
+        },
+        "status": "PARTIAL_SUCCESS"
+    },
+    {
+        "id": "486a3fee-6759-475b-bb0b-75bf03bdb7d5",
+        "timestamp": "2026-01-31T05:11:21.775670",
+        "agent": "Auditor_Agent",
+        "model": "gemini-2.5-flash",
+        "action": "ANALYSIS",
+        "details": {
+            "file_analyzed": "simple.py",
+            "input_prompt": "Tu es un expert Python et auditeur de code.\n\n📋 FICHIER : simple.py\n\n🎯 MISSION :\nAnalyse ce code et détecte TOUS les problèmes. Ne JAMAIS inventer de bugs inexistants.\n\n🐛 TYPES DE PROBLÈMES À DÉTECTER :\n\nCRITICAL :\n- Variables non définies\n- Imports manquants\n- Syntaxe invalide\n\nHIGH :\n- Division par zéro\n- Index hors limites\n- Opérations sur None\n- Clés dictionnaire inexistantes\n- Fichiers inexistants\n\nMEDIUM :\n- Docstrings manquantes\n- Pas de type hints\n- Nommage non descriptif\n\nLOW :\n- Violations PEP8 (espaces, longueur ligne)\n- Imports désordonnés\n\n📝 CODE À ANALYSER :\n```python\ndef calculate_sum(a, b)\n    return a + b\n\nresult = calculate_sum(5, 3)\nprint(result)\n```\n\n📤 FORMAT DE SORTIE :\nJSON UNIQUEMENT avec cette structure exacte :\n\n{\"file\":\"simple.py\",\"total_issues\":X,\"issues\":[{\"line\":N,\"type\":\"...\",\"severity\":\"...\",\"description\":\"...\",\"suggestion\":\"...\"}]}\n\nExemple :\n{\"file\":\"test.py\",\"total_issues\":2,\"issues\":[{\"line\":5,\"type\":\"undefined_variable\",\"severity\":\"HIGH\",\"description\":\"Variable 'x' not defined\",\"suggestion\":\"Define 'x' before use\"},{\"line\":10,\"type\":\"missing_docstring\",\"severity\":\"MEDIUM\",\"description\":\"Function lacks docstring\",\"suggestion\":\"Add docstring with Args/Returns\"}]}\n\nSi aucun bug : {\"file\":\"simple.py\",\"total_issues\":0,\"issues\":[]}\n\nPas de texte avant/après le JSON.\n",
+            "output_response": "N/A",
+            "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. "
+        },
+        "status": "FAILURE"
+    },
+    {
+        "id": "775c83bc-fe7a-4dfe-bf1f-056d14fe275b",
+        "timestamp": "2026-01-31T05:11:21.900405",
+        "agent": "Orchestrator",
+        "model": "N/A",
+        "action": "ANALYSIS",
+        "details": {
+            "file": "simple.py",
+            "input_prompt": "Process file: simple.py",
+            "output_response": "Status: FAILED",
+            "iterations": 2,
+            "bugs_found": 0,
+            "bugs_fixed": 0,
+            "final_status": "FAILED",
+            "workflow_engine": "LangGraph_v2.0"
+        },
+        "status": "PARTIAL_SUCCESS"
     }
 ]
