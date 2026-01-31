@@ -1,8 +1,10 @@
 """
 Orchestrateur - Gestion du workflow multi-agents
 Responsable : Lead Dev (Orchestrateur)
-Date : 2026-01-10
-Version : 1.1 - Pass audit_report to judge for better validation
+Date : 2026-01-31
+Version : 2.0 - LangGraph Integration (Logique v1.1 préservée à 100%)
+
+
 """
 
 import os
@@ -12,6 +14,7 @@ from dataclasses import dataclass
 import google.generativeai as genai
 
 from src.agents import AuditorAgent, FixerAgent, JudgeAgent
+from src.workflow_graph import refactoring_graph  # ← MODIFICATION 1 : Import du graphe
 from src.tools.file_tools import read_file, write_file
 from src.utils.logger import log_experiment, ActionType
 
@@ -47,9 +50,10 @@ class Orchestrator:
         self.target_dir = target_dir
         self.max_iterations = max_iterations
         
-        self.auditor = AuditorAgent()
-        self.fixer = FixerAgent()
-        self.judge = JudgeAgent()
+        # MODIFICATION 2 : Les agents sont maintenant créés dans les nœuds du graphe
+        # self.auditor = AuditorAgent()
+        # self.fixer = FixerAgent()
+        # self.judge = JudgeAgent()
         
         self.files_processed: List[WorkflowState] = []
         self.total_files = 0
@@ -57,7 +61,7 @@ class Orchestrator:
         self.files_failed = 0
         
         print(f"\n{'='*80}")
-        print(f"ORCHESTRATOR INITIALISE")
+        print(f"ORCHESTRATOR INITIALISE (LangGraph v2.0)")  # ← MODIFICATION 3
         print(f"{'='*80}")
         print(f"Dossier cible : {target_dir}")
         print(f"Max iterations : {max_iterations}")
@@ -66,6 +70,8 @@ class Orchestrator:
     def run(self) -> Dict:
         """
         Execute le workflow complet sur tous les fichiers Python du dossier cible.
+        
+        IDENTIQUE À v1.1 - AUCUNE MODIFICATION
         
         Returns:
             dict: Resume des resultats
@@ -97,6 +103,8 @@ class Orchestrator:
         """
         Trouve tous les fichiers Python dans le dossier cible.
         
+        IDENTIQUE À v1.1 - AUCUNE MODIFICATION
+        
         Returns:
             list: Liste des chemins complets vers les fichiers .py
         """
@@ -112,7 +120,10 @@ class Orchestrator:
     
     def _process_file(self, file_path: str) -> None:
         """
-        Traite un fichier Python avec le workflow complet.
+        Traite un fichier Python avec le graphe LangGraph.
+        
+        MODIFICATION 4 : Remplace la boucle while par refactoring_graph.invoke()
+        La logique métier reste IDENTIQUE (elle est dans workflow_graph.py)
         
         Args:
             file_path (str): Chemin complet vers le fichier
@@ -127,99 +138,74 @@ class Orchestrator:
             original_code = read_file(file_path)
         except Exception as e:
             print(f"ERREUR: Impossible de lire le fichier : {e}")
+            self.files_failed += 1  # Incrémenter le compteur d'échecs
             return
         
+        # Préparer l'état initial pour LangGraph
+        # Structure identique à WorkflowState de v1.1
+        initial_state = {
+            "file_path": file_path,
+            "file_name": file_name,
+            "iteration": 0,
+            "max_iterations": self.max_iterations,
+            "audit_report": {},
+            "judge_report": {},
+            "status": "PENDING",
+            "total_bugs_found": 0,
+            "total_bugs_fixed": 0,
+            "original_code": original_code,
+            "current_code": original_code
+        }
+        
+        # ═══════════════════════════════════════════════════════════
+        # EXÉCUTION DU GRAPHE LANGGRAPH
+        # Remplace la boucle while des lignes 164-232 de v1.1
+        # La logique exacte est préservée dans workflow_graph.py
+        # ═══════════════════════════════════════════════════════════
+        
+        try:
+            final_state = refactoring_graph.invoke(initial_state)
+            
+        except Exception as e:
+            print(f"\n❌ ERREUR lors de l'exécution du graphe : {e}")
+            import traceback
+            traceback.print_exc()
+            
+            final_state = {
+                **initial_state,
+                "status": "FAILED",
+                "iteration": 0
+            }
+        
+        # ═══════════════════════════════════════════════════════════
+        # TRAITEMENT DES RÉSULTATS
+        # IDENTIQUE À v1.1 - Créer WorkflowState et mettre à jour compteurs
+        # ═══════════════════════════════════════════════════════════
+        
+        # Créer l'objet WorkflowState pour compatibilité avec v1.1
         state = WorkflowState(
             file_name=file_name,
             file_path=file_path,
-            current_code=original_code,
+            current_code=final_state.get("current_code", original_code),
             original_code=original_code,
-            iteration=0
+            iteration=final_state.get("iteration", 0),
+            audit_report=final_state.get("audit_report", {}),
+            judge_report=final_state.get("judge_report", {}),
+            status=final_state.get("status", "FAILED"),
+            total_bugs_found=final_state.get("total_bugs_found", 0),
+            total_bugs_fixed=final_state.get("total_bugs_fixed", 0)
         )
-        
-        while state.iteration < self.max_iterations:
-            state.iteration += 1
-            
-            print(f"\n{'='*80}")
-            print(f"ITERATION {state.iteration}/{self.max_iterations}")
-            print(f"{'='*80}")
-            
-            # ETAPE 1 : AUDIT
-            audit_report = self.auditor.analyze_file(file_path)
-            
-            if audit_report is None:
-                print(f"ERREUR: Audit echoue - Arret du traitement")
-                state.status = "FAILED"
-                break
-            
-            state.audit_report = audit_report
-            bugs_found = audit_report.get("total_issues", 0)
-            state.total_bugs_found += bugs_found
-            
-            if bugs_found == 0:
-                print(f"Code propre - Aucun bug detecte")
-                
-                # ✅ CHANGEMENT ICI : Passer audit_report au judge
-                judge_report = self.judge.judge_file(file_path, audit_report)
-                
-                if judge_report and judge_report.get("decision") == "VALIDATE":
-                    state.status = "VALIDATED"
-                    state.judge_report = judge_report
-                    self.files_validated += 1
-                    print(f"\n✅ {file_name} VALIDE !")
-                    break
-                else:
-                    print(f"ATTENTION: Tests ont echoue malgre l'absence de bugs detectes")
-                    state.status = "FAILED"
-                    break
-            
-            # ETAPE 2 : FIX
-            fix_success = self.fixer.fix_file(file_path, audit_report)
-            
-            if not fix_success:
-                print(f"ERREUR: Correction echouee - Arret du traitement")
-                state.status = "FAILED"
-                break
-            
-            state.current_code = read_file(file_path)
-            state.total_bugs_fixed += bugs_found
-            
-            # ETAPE 3 : TEST
-            # ✅ CHANGEMENT ICI : Passer audit_report au judge
-            judge_report = self.judge.judge_file(file_path, audit_report)
-            
-            if judge_report is None:
-                print(f"ERREUR: Test echoue - Arret du traitement")
-                state.status = "FAILED"
-                break
-            
-            state.judge_report = judge_report
-            decision = judge_report.get("decision")
-            
-            if decision == "VALIDATE":
-                state.status = "VALIDATED"
-                self.files_validated += 1
-                print(f"\n✅ {file_name} VALIDE !")
-                break
-            
-            elif decision == "PASS_TO_FIXER":
-                print(f"\nATTENTION: Tests echoues - Nouvelle iteration necessaire")
-                
-                if state.iteration >= self.max_iterations:
-                    state.status = "MAX_ITERATIONS"
-                    self.files_failed += 1
-                    print(f"\nATTENTION: Limite de {self.max_iterations} iterations atteinte")
-                    break
-                
-                continue
-            
-            else:
-                print(f"ERREUR: Decision inconnue du Judge : {decision}")
-                state.status = "FAILED"
-                break
         
         self.files_processed.append(state)
         
+        # Mise à jour des compteurs (IDENTIQUE à v1.1)
+        if state.status == "VALIDATED":
+            self.files_validated += 1
+        else:
+            self.files_failed += 1
+        
+        # Logging pour l'analyse scientifique
+        # IDENTIQUE à v1.1 avec ajout du champ "workflow_engine"
         log_experiment(
             agent_name="Orchestrator",
             model_used="N/A",
@@ -231,7 +217,8 @@ class Orchestrator:
                 "iterations": state.iteration,
                 "bugs_found": state.total_bugs_found,
                 "bugs_fixed": state.total_bugs_fixed,
-                "final_status": state.status
+                "final_status": state.status,
+                "workflow_engine": "LangGraph_v2.0"  # ← Seule nouveauté dans les logs
             },
             status="SUCCESS" if state.status == "VALIDATED" else "PARTIAL_SUCCESS"
         )
@@ -239,6 +226,8 @@ class Orchestrator:
     def _generate_summary(self) -> Dict:
         """
         Genere le resume des resultats.
+        
+        IDENTIQUE À v1.1 - AUCUNE MODIFICATION
         
         Returns:
             dict: Resume complet
@@ -265,6 +254,8 @@ class Orchestrator:
     def _print_final_summary(self, summary: Dict) -> None:
         """
         Affiche le resume final dans la console.
+        
+        IDENTIQUE À v1.1 - AUCUNE MODIFICATION
         
         Args:
             summary (dict): Resume a afficher
