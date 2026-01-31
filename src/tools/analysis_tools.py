@@ -1,16 +1,14 @@
 """
-Module responsible for running pylint on a Python file
-and returning the analysis results.
+Module responsible for running pylint and pytest on Python files.
+
+Auteur: Ingénieur Outils (Toolsmith)
+Date: 2026-01-10
 """
 
 import os
 import subprocess
 from typing import Dict
 
-
-from typing import Dict
-import subprocess
-import os
 
 def run_pylint(file_path: str) -> Dict[str, float | str | int | bool]:
     """
@@ -32,12 +30,11 @@ def run_pylint(file_path: str) -> Dict[str, float | str | int | bool]:
         check=False
     )
 
-   
     score = 0.0
     for line in result.stdout.split("\n"):
         if "rated at" in line:
-            
             score = float(line.split("rated at")[1].split("/")[0].strip())
+            break
 
     return {
         "score": score,
@@ -47,6 +44,7 @@ def run_pylint(file_path: str) -> Dict[str, float | str | int | bool]:
         "returncode": result.returncode,
         "success": result.returncode == 0
     }
+
 
 def run_pytest(target_path: str) -> dict:
     """
@@ -80,4 +78,3 @@ def run_pytest(target_path: str) -> dict:
         "stderr": result.stderr,
         "returncode": result.returncode
     }
-
