@@ -1,0 +1,111 @@
+{
+  "file": "buggy_code_edge_cases.py",
+  "total_issues": 15,
+  "issues": [
+    {
+      "line": 1,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'divide_list_elements' is missing a docstring.",
+      "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 4,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing 'lst[i+1]' can lead to an IndexError when 'i' is the last index of the list.",
+      "suggestion": "Adjust the loop range to `range(len(lst) - 1)` or add a bounds check to prevent accessing an index beyond the list's length."
+    },
+    {
+      "line": 4,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "The element 'lst[i+1]' used as a divisor could potentially be zero, leading to a ZeroDivisionError.",
+      "suggestion": "Add a check to ensure 'lst[i+1]' is not zero before performing the division, e.g., `if lst[i+1] != 0:`."
+    },
+    {
+      "line": 7,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'get_first_element' is missing a docstring.",
+      "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 8,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing 'items[0]' can lead to an IndexError if the list 'items' is empty.",
+      "suggestion": "Add a check to ensure the list 'items' is not empty before accessing its elements, e.g., `if items: return items[0]`."
+    },
+    {
+      "line": 10,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'calculate_percentage' is missing a docstring.",
+      "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 11,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "The variable 'whole' used as a divisor could potentially be zero, leading to a ZeroDivisionError.",
+      "suggestion": "Add a check to ensure 'whole' is not zero before performing the division, e.g., `if whole != 0: return (part / whole) * 100`."
+    },
+    {
+      "line": 13,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'find_user_by_id' is missing a docstring.",
+      "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 15,
+      "type": "key_error",
+      "severity": "HIGH",
+      "description": "Accessing 'user[\"id\"]' can lead to a KeyError if any dictionary in 'users' does not contain the key 'id'.",
+      "suggestion": "Use `.get(\"id\")` with a default value or add a check `if \"id\" in user:` before accessing the key."
+    },
+    {
+      "line": 19,
+      "type": "missing_docstring",
+      "severity": "MEDIUM",
+      "description": "Function 'process_string' is missing a docstring.",
+      "suggestion": "Add a docstring explaining the function's purpose, arguments, and return value."
+    },
+    {
+      "line": 21,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing 'words[0]' can lead to an IndexError if 'text.split()' results in an empty list (e.g., if 'text' is an empty string or contains only whitespace).",
+      "suggestion": "Add a check `if words:` before accessing the element to ensure the list is not empty."
+    },
+    {
+      "line": 26,
+      "type": "division_by_zero",
+      "severity": "HIGH",
+      "description": "Division by 'y', which is explicitly set to zero, will cause a ZeroDivisionError.",
+      "suggestion": "Ensure 'y' is not zero before performing division, or handle the ZeroDivisionError appropriately."
+    },
+    {
+      "line": 29,
+      "type": "index_out_of_bounds",
+      "severity": "HIGH",
+      "description": "Accessing 'numbers[0]' will lead to an IndexError because 'numbers' is an empty list.",
+      "suggestion": "Add a check `if numbers:` before accessing elements, or ensure the list is populated."
+    },
+    {
+      "line": 32,
+      "type": "none_operation",
+      "severity": "HIGH",
+      "description": "Attempting to call `len()` on 'data', which is `None`, will result in a TypeError.",
+      "suggestion": "Add a check `if data is not None:` before calling `len()` or ensure 'data' is initialized to a non-None type."
+    },
+    {
+      "line": 36,
+      "type": "none_operation",
+      "severity": "HIGH",
+      "description": "'user' can be `None` if 'find_user_by_id' does not find a user, leading to a TypeError when attempting to access 'user[\"name\"]'.",
+      "suggestion": "Add a check `if user is not None:` before accessing its elements, or provide a default empty dictionary."
+    }
+  ]
+}

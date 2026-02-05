@@ -11,8 +11,8 @@ class ActionType(str, Enum):
     """
     Énumération des types d'actions possibles pour standardiser l'analyse.
     """
-    ANALYSIS = "CODE_ANALYSIS"  # Audit, lecture, recherche de bugs
-    GENERATION = "CODE_GEN"     # Création de nouveau code/tests/docs
+    ANALYSIS = "ANALYSIS"  # Audit, lecture, recherche de bugs
+    GENERATION = "GENERATION"     # Création de nouveau code/tests/docs
     DEBUG = "DEBUG"             # Analyse d'erreurs d'exécution
     FIX = "FIX"                 # Application de correctifs
 
