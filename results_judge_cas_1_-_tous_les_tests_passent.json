@@ -1,9 +1,0 @@
-{
-  "file": "buggy_code_simple.py",
-  "decision": "VALIDATE",
-  "total_tests": 5,
-  "passed": 5,
-  "failed": 0,
-  "errors": [],
-  "message": "All tests passed successfully. Code is validated."
-}
